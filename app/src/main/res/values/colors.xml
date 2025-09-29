@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Original Material colors -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -7,4 +8,22 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Irlens-friendly Light Theme Colors -->
+    <color name="light_background">#FFF8F6F0</color>  <!-- Soft cream background -->
+    <color name="light_surface">#FFEEEBE5</color>     <!-- Light warm gray -->
+    <color name="light_primary">#FF5D7C8D</color>     <!-- Soft blue-gray -->
+    <color name="light_on_primary">#FFFFFFFF</color>
+    <color name="light_secondary">#FF7B9AAB</color>   <!-- Muted blue -->
+    <color name="light_on_background">#FF2C3E50</color>  <!-- Dark blue-gray text -->
+    <color name="light_on_surface">#FF34495E</color>  <!-- Softer text -->
+
+    <!-- Irlens-friendly Dark Theme Colors -->
+    <color name="dark_background">#FF1A1B1E</color>   <!-- Very dark blue-gray -->
+    <color name="dark_surface">#FF24262A</color>      <!-- Dark surface -->
+    <color name="dark_primary">#FF7B9AAB</color>      <!-- Soft blue -->
+    <color name="dark_on_primary">#FF1A1B1E</color>
+    <color name="dark_secondary">#FF9BB5C4</color>    <!-- Light blue-gray -->
+    <color name="dark_on_background">#FFE8E8E8</color>  <!-- Soft white text -->
+    <color name="dark_on_surface">#FFD6D6D6</color>   <!-- Slightly dimmer text -->
 </resources>

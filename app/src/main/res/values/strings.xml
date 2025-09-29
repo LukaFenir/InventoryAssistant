@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">InventoryAssistant</string>
+    <string name="hello_world">Hello World</string>
+    <string name="welcome_subtitle">Welcome to your inventory assistant</string>
+    <string name="irlens_info">This app includes visual themes designed to reduce eye strain for users with Irlens Syndrome and visual processing sensitivities.</string>
+    <string name="toggle_theme">Switch Theme</string>
+    <string name="light_theme">Light Theme</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="switch_to_light">Switch to Light Theme</string>
+    <string name="switch_to_dark">Switch to Dark Theme</string>
+
+    <!-- Navigation -->
+    <string name="home">Home</string>
+    <string name="inventory">Inventory</string>
+    <string name="settings">Settings</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="accessibility_settings">Accessibility Settings</string>
+    <string name="theme_description">Choose a theme that works best for your visual comfort. The light theme uses soft, warm colors while the dark theme reduces brightness for comfortable viewing.</string>
+
+    <!-- Inventory Screen -->
+    <string name="inventory_title">Grocery Inventory</string>
+    <string name="inventory_subtitle">Track what you have at home</string>
 </resources>
