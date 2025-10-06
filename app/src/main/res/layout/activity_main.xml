@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -52,37 +53,44 @@
         android:orientation="horizontal"
         android:background="?attr/colorSurface"
         android:elevation="8dp"
+        android:gravity="center"
         android:paddingVertical="12dp"
         android:paddingHorizontal="16dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/homeButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/home"
-            android:textSize="14sp"
-            android:layout_marginEnd="4dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:icon="@drawable/ic_home"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:layout_marginEnd="8dp"
             android:enabled="false" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/inventoryButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/inventory"
-            android:textSize="14sp"
-            android:layout_marginHorizontal="4dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:icon="@drawable/ic_inventory"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:layout_marginHorizontal="8dp"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/settings"
-            android:textSize="14sp"
-            android:layout_marginStart="4dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:icon="@drawable/ic_settings"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:layout_marginStart="8dp"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
     </LinearLayout>
