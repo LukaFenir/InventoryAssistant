@@ -3,6 +3,7 @@ package com.lukafenir.ivy
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -55,6 +56,12 @@ class GroceryAdapter(private var items: List<InventoryItem>) :
                 val groceryHolder = holder as GroceryViewHolder
                 groceryHolder.nameTextView.text = item.item.name
                 groceryHolder.quantityTextView.text = item.item.quantity.toString()
+
+                // Set up long-click listener to show popup menu
+                groceryHolder.itemView.setOnLongClickListener { view ->
+                    showPopupMenu(view, item.item)
+                    true
+                }
             }
         }
     }
@@ -64,5 +71,26 @@ class GroceryAdapter(private var items: List<InventoryItem>) :
     fun updateItems(newItems: List<InventoryItem>) {
         items = newItems
         notifyDataSetChanged()
+    }
+
+    private fun showPopupMenu(view: View, item: GroceryItem) {
+        val popup = PopupMenu(view.context, view)
+        popup.menuInflater.inflate(R.menu.grocery_item_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_edit -> {
+                    // TODO: Implement edit functionality
+                    true
+                }
+                R.id.action_delete -> {
+                    // TODO: Implement delete functionality
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popup.show()
     }
 }
