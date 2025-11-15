@@ -7,6 +7,11 @@ data class GroceryItem(
     val category: String = "Other"
 )
 
+sealed class InventoryItem {
+    data class CategoryHeader(val category: String) : InventoryItem()
+    data class GroceryItemData(val item: GroceryItem) : InventoryItem()
+}
+
 object SampleData {
     fun getSampleGroceries(): List<GroceryItem> {
         return listOf(

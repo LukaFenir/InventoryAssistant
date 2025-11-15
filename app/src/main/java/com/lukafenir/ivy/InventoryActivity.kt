@@ -67,7 +67,22 @@ class InventoryActivity : AppCompatActivity() {
 
     private fun loadInventory() {
         val groceries = SampleData.getSampleGroceries()
-        groceryAdapter.updateGroceries(groceries)
+        val groupedItems = groupItemsByCategory(groceries)
+        groceryAdapter.updateItems(groupedItems)
+    }
+
+    private fun groupItemsByCategory(groceries: List<GroceryItem>): List<InventoryItem> {
+        val result = mutableListOf<InventoryItem>()
+        val groupedByCategory = groceries.groupBy { it.category }
+
+        groupedByCategory.forEach { (category, items) ->
+            result.add(InventoryItem.CategoryHeader(category))
+            items.forEach { item ->
+                result.add(InventoryItem.GroceryItemData(item))
+            }
+        }
+
+        return result
     }
 
     private fun applySavedTheme() {
