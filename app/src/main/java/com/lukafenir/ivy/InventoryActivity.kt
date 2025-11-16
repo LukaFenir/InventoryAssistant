@@ -1,9 +1,12 @@
 package com.lukafenir.ivy
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +36,12 @@ class InventoryActivity : AppCompatActivity() {
         setupRecyclerView()
         setupNavigation()
         loadInventory()
+        disableTransition()
+    }
+
+    override fun finish() {
+        super.finish()
+        disableTransition()
     }
 
     private fun initializeViews() {
@@ -53,15 +62,21 @@ class InventoryActivity : AppCompatActivity() {
     private fun setupNavigation() {
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent)
-            finish()
         }
 
         settingsButton.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
-            finish()
+        }
+    }
+
+    private fun disableTransition() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, 0, 0)
+        } else {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(0, 0)
         }
     }
 
