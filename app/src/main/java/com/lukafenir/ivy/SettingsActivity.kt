@@ -44,7 +44,11 @@ class SettingsActivity : AppCompatActivity() {
         themeToggleButton = findViewById(R.id.themeToggleButton)
         homeButton = findViewById(R.id.homeButton)
         inventoryButton = findViewById(R.id.inventoryButton)
+        val settingsButton: MaterialButton = findViewById(R.id.settingsButton)
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        // Disable settings button since we're on the settings screen
+        settingsButton.isEnabled = false
         updateThemeButtonText()
     }
 

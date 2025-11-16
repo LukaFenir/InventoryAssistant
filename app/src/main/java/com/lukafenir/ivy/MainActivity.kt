@@ -43,7 +43,11 @@ class MainActivity : AppCompatActivity() {
     private fun initializeViews() {
         inventoryButton = findViewById(R.id.inventoryButton)
         settingsButton = findViewById(R.id.settingsButton)
+        val homeButton: MaterialButton = findViewById(R.id.homeButton)
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        // Disable home button since we're on the home screen
+        homeButton.isEnabled = false
     }
 
     private fun setupNavigation() {

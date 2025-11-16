@@ -48,7 +48,11 @@ class InventoryActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.inventoryRecyclerView)
         homeButton = findViewById(R.id.homeButton)
         settingsButton = findViewById(R.id.settingsButton)
+        val inventoryButton: MaterialButton = findViewById(R.id.inventoryButton)
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        // Disable inventory button since we're on the inventory screen
+        inventoryButton.isEnabled = false
     }
 
     private fun setupRecyclerView() {

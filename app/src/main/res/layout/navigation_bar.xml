@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="?attr/colorSurface"
+    android:elevation="8dp"
+    android:gravity="center"
+    android:paddingVertical="12dp"
+    android:paddingHorizontal="16dp"
+    android:baselineAligned="false">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/homeButton"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_weight="1"
+        android:text="@string/home"
+        android:textSize="12sp"
+        android:textAllCaps="false"
+        android:textColor="@color/button_text_color"
+        app:icon="@drawable/ic_home"
+        app:iconGravity="top"
+        app:iconPadding="0dp"
+        app:iconTint="@color/button_text_color"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/inventoryButton"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_weight="1"
+        android:text="@string/inventory"
+        android:textSize="12sp"
+        android:textAllCaps="false"
+        android:textColor="@color/button_text_color"
+        app:icon="@drawable/ic_inventory"
+        app:iconGravity="top"
+        app:iconPadding="0dp"
+        app:iconTint="@color/button_text_color"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/settingsButton"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_weight="1"
+        android:text="@string/settings"
+        android:textSize="12sp"
+        android:textAllCaps="false"
+        android:textColor="@color/button_text_color"
+        app:icon="@drawable/ic_settings"
+        app:iconGravity="top"
+        app:iconPadding="0dp"
+        app:iconTint="@color/button_text_color"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+</LinearLayout>

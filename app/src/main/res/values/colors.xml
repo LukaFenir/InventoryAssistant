@@ -26,4 +26,12 @@
     <color name="dark_secondary">#FF9BB5C4</color>    <!-- Light blue-gray -->
     <color name="dark_on_background">#FFE8E8E8</color>  <!-- Soft white text -->
     <color name="dark_on_surface">#FFD6D6D6</color>   <!-- Slightly dimmer text -->
+
+    <!-- Button text colors - light theme -->
+    <color name="button_text_enabled_light">#A634495E</color>  <!-- light_on_surface with 50% opacity -->
+    <color name="button_text_disabled_light">#FF34495E</color> <!-- light_on_surface full opacity -->
+
+    <!-- Button text colors - dark theme -->
+    <color name="button_text_enabled_dark">#80D6D6D6</color>   <!-- dark_on_surface with 50% opacity -->
+    <color name="button_text_disabled_dark">#FFD6D6D6</color>  <!-- dark_on_surface full opacity -->
 </resources>
