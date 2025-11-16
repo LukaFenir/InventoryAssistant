@@ -60,42 +60,52 @@
         android:elevation="8dp"
         android:gravity="center"
         android:paddingVertical="12dp"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="16dp"
+        android:baselineAligned="false">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/homeButton"
-            android:layout_width="64dp"
+            android:layout_width="0dp"
             android:layout_height="64dp"
+            android:layout_weight="1"
+            android:text="Home"
+            android:textSize="12sp"
+            android:textAllCaps="false"
             app:icon="@drawable/ic_home"
-            app:iconGravity="textStart"
+            app:iconGravity="top"
             app:iconPadding="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:layout_marginEnd="8dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/inventoryButton"
-            android:layout_width="64dp"
+            android:layout_width="0dp"
             android:layout_height="64dp"
+            android:layout_weight="1"
+            android:text="Inventory"
+            android:textSize="12sp"
+            android:textAllCaps="false"
             app:icon="@drawable/ic_inventory"
-            app:iconGravity="textStart"
+            app:iconGravity="top"
             app:iconPadding="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:layout_marginHorizontal="8dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"
-            android:layout_width="64dp"
+            android:layout_width="0dp"
             android:layout_height="64dp"
+            android:layout_weight="1"
+            android:text="Settings"
+            android:textSize="12sp"
+            android:textAllCaps="false"
             app:icon="@drawable/ic_settings"
-            app:iconGravity="textStart"
+            app:iconGravity="top"
             app:iconPadding="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:layout_marginStart="8dp"
             android:enabled="false" />
 
     </LinearLayout>
