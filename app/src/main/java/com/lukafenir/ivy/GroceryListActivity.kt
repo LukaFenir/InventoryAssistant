@@ -7,6 +7,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.lukafenir.ivy.databinding.ActivityGroceryListBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class GroceryListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGroceryListBinding
@@ -25,6 +27,7 @@ class GroceryListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupNavigation()
+        setupRecyclerView()
         disableTransition()
     }
 
@@ -45,6 +48,12 @@ class GroceryListActivity : AppCompatActivity() {
         }
 
         binding.navigationBar.listButton.isEnabled = false
+    }
+
+    private fun setupRecyclerView() {
+        val groceryRecyclerView: RecyclerView = findViewById(R.id.groceryRecyclerView)
+        groceryRecyclerView.layoutManager = LinearLayoutManager(this)
+        groceryRecyclerView.adapter = GroceryAdapter(SampleData.getSampleGroceries()) // Replace with your data
     }
 
     private fun disableTransition() {

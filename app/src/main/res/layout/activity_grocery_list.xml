@@ -25,11 +25,13 @@
     </LinearLayout>
 
     <!-- Empty space for content -->
-    <View
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/groceryRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="?attr/android:colorBackground" />
+        />
+
 
     <!-- Navigation Bar -->
     <include
