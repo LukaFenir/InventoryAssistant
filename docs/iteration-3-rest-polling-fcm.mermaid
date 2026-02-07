@@ -1,0 +1,70 @@
+graph TB
+    subgraph "Device 1 - Your Phone"
+        subgraph "UI Layer"
+            A_GLA[GroceryListActivity<br/>+ GroceryAdapter]
+        end
+        A_VM[GroceryViewModel]
+        A_REPO[GroceryRepository]
+        A_ROOM[(Room Database<br/>Local Cache)]
+        A_SVC[Foreground Service<br/>Polling]
+    end
+
+    subgraph "Device 2 - Partner's Phone"
+        subgraph "UI Layer "
+            B_GLA[GroceryListActivity<br/>+ GroceryAdapter]
+        end
+        B_VM[GroceryViewModel]
+        B_REPO[GroceryRepository]
+        B_ROOM[(Room Database<br/>Local Cache)]
+        B_SVC[Foreground Service<br/>Polling]
+    end
+
+    subgraph "Your Backend - AWS/Local Server"
+        S1[REST API<br/>CRUD Endpoints]
+        S2[PostgreSQL/MySQL<br/>Shared Database]
+        S3[FCM Integration<br/>Notification Service]
+    end
+
+    subgraph "Google Cloud"
+        FCM[Firebase Cloud Messaging]
+    end
+
+    %% Foreground - Polling
+    A_SVC -->|Poll every 10-30s<br/>GET /groceries<br/>when app open| S1
+    B_SVC -->|Poll every 10-30s<br/>GET /groceries<br/>when app open| S1
+
+    %% CRUD Operations
+    A_REPO -->|POST/PUT/DELETE<br/>/groceries| S1
+    B_REPO -->|POST/PUT/DELETE<br/>/groceries| S1
+
+    %% UI to ViewModel to Repository
+    A_GLA --> A_VM
+    A_VM <--> A_REPO
+    B_GLA --> B_VM
+    B_VM <--> B_REPO
+
+    %% Database
+    S1 <-->|Read/Write| S2
+
+    %% Background - FCM
+    S1 -->|Trigger notification<br/>when data changes| S3
+    S3 -->|Send push message| FCM
+    FCM -.->|Wake app<br/>trigger sync| A_REPO
+    FCM -.->|Wake app<br/>trigger sync| B_REPO
+
+    %% Local caching
+    A_REPO <-->|Cache locally| A_ROOM
+    B_REPO <-->|Cache locally| B_ROOM
+
+    style S1 fill:#87CEEB
+    style S2 fill:#87CEEB
+    style S3 fill:#87CEEB
+    style FCM fill:#FFA500
+    style A_ROOM fill:#90EE90
+    style B_ROOM fill:#90EE90
+    style A_REPO fill:#4CAF50
+    style B_REPO fill:#4CAF50
+    style A_VM fill:#6BCF7F
+    style B_VM fill:#6BCF7F
+
+    note1[Note: Your backend controls data<br/>FCM only for background notifications<br/>GroceryRepository handles sync logic<br/>~30 second delay in foreground]

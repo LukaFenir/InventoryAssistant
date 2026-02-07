@@ -1,0 +1,54 @@
+graph TB
+    subgraph "Device 1 - Your Phone"
+        subgraph "UI Layer"
+            A_GLA[GroceryListActivity<br/>+ GroceryAdapter]
+            A_MA[MainActivity]
+            A_SA[SettingsActivity]
+        end
+        A_VM[GroceryViewModel]
+        A_REPO[GroceryRepository]
+        A_ROOM[(Room Database<br/>Local Cache)]
+    end
+
+    subgraph "Device 2 - Partner's Phone"
+        subgraph "UI Layer "
+            B_GLA[GroceryListActivity<br/>+ GroceryAdapter]
+            B_MA[MainActivity]
+            B_SA[SettingsActivity]
+        end
+        B_VM[GroceryViewModel]
+        B_REPO[GroceryRepository]
+        B_ROOM[(Room Database<br/>Local Cache)]
+    end
+
+    subgraph "Firebase Backend"
+        F1[Firebase Realtime Database<br/>or Firestore]
+        F2[Firebase Auth]
+    end
+
+    A_GLA --> A_VM
+    A_VM <--> A_REPO
+    A_REPO <-->|Real-time sync<br/>Firestore SDK| F1
+    A_REPO -->|Cache locally| A_ROOM
+
+    B_GLA --> B_VM
+    B_VM <--> B_REPO
+    B_REPO <-->|Real-time sync<br/>Firestore SDK| F1
+    B_REPO -->|Cache locally| B_ROOM
+
+    A_REPO -.->|Authentication| F2
+    B_REPO -.->|Authentication| F2
+
+    F1 -.->|Automatic push| A_REPO
+    F1 -.->|Automatic push| B_REPO
+
+    style F1 fill:#FFA500
+    style F2 fill:#FFA500
+    style A_ROOM fill:#90EE90
+    style B_ROOM fill:#90EE90
+    style A_REPO fill:#4CAF50
+    style B_REPO fill:#4CAF50
+    style A_VM fill:#6BCF7F
+    style B_VM fill:#6BCF7F
+
+    note1[Note: Fully vendor locked-in<br/>Firebase handles all sync<br/>GroceryRepository abstracts Firebase from ViewModels]

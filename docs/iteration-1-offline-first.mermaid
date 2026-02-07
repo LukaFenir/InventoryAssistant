@@ -1,0 +1,40 @@
+graph TB
+    subgraph "Device - Your Phone"
+        subgraph "UI Layer (XML + ViewBinding)"
+            MA[MainActivity<br/>Home Screen]
+            GLA[GroceryListActivity<br/>Grocery List Screen]
+            SA[SettingsActivity<br/>Settings Screen]
+            GA[GroceryAdapter<br/>RecyclerView Adapter]
+        end
+
+        VM[GroceryViewModel<br/>Business Logic & State]
+        REPO[GroceryRepository<br/>Data Abstraction Layer]
+
+        subgraph "Room Database (SQLite)"
+            DAO[GroceryDao<br/>CRUD Operations]
+            ROOM[(Room Database<br/>Local Storage)]
+            E1[GroceryItem Entity<br/>id: Int, name: String, isChecked: Boolean]
+        end
+    end
+
+    GLA -->|User Actions| VM
+    VM -->|Observe State<br/>LiveData/Flow| GLA
+    GLA -->|Binds Items| GA
+
+    VM <-->|Get/Update Data| REPO
+
+    REPO <-->|CRUD via DAOs| DAO
+    DAO <-->|SQL Queries| ROOM
+    ROOM -.->|Stores| E1
+
+    style MA fill:#98D8C8
+    style GLA fill:#98D8C8
+    style SA fill:#98D8C8
+    style GA fill:#98D8C8
+    style VM fill:#6BCF7F
+    style REPO fill:#4CAF50
+    style DAO fill:#2E7D32
+    style ROOM fill:#2E7D32
+    style E1 fill:#2E7D32
+
+    note1[Note: Single device only<br/>Fully offline<br/>Room is single source of truth<br/>Repository pattern enables future sync]

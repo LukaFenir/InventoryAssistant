@@ -1,0 +1,85 @@
+graph TB
+    subgraph "Device 1 - Your Phone"
+        subgraph "UI Layer"
+            A_GLA[GroceryListActivity<br/>+ GroceryAdapter]
+        end
+        A_VM[GroceryViewModel]
+        A_REPO[GroceryRepository]
+        A_ROOM[(Room Database<br/>Local Cache)]
+        A_WS[WebSocket Client<br/>when foreground]
+    end
+
+    subgraph "Device 2 - Partner's Phone"
+        subgraph "UI Layer "
+            B_GLA[GroceryListActivity<br/>+ GroceryAdapter]
+        end
+        B_VM[GroceryViewModel]
+        B_REPO[GroceryRepository]
+        B_ROOM[(Room Database<br/>Local Cache)]
+        B_WS[WebSocket Client<br/>when foreground]
+    end
+
+    subgraph "Your Backend - AWS/Local Server"
+        S1[REST API<br/>CRUD Endpoints]
+        S2[PostgreSQL/MySQL<br/>Shared Database]
+        S3[FCM Integration<br/>Notification Service]
+        S4[WebSocket Server<br/>Real-time Updates]
+        S5[Message Broker<br/>Optional: Redis/RabbitMQ]
+    end
+
+    subgraph "Google Cloud"
+        FCM[Firebase Cloud Messaging]
+    end
+
+    %% Foreground - WebSocket (real-time)
+    A_WS <===>|Persistent connection<br/>Instant bidirectional updates<br/>when app foreground| S4
+    B_WS <===>|Persistent connection<br/>Instant bidirectional updates<br/>when app foreground| S4
+
+    %% CRUD Operations
+    A_REPO -->|POST/PUT/DELETE<br/>/groceries| S1
+    B_REPO -->|POST/PUT/DELETE<br/>/groceries| S1
+
+    %% UI to ViewModel to Repository
+    A_GLA --> A_VM
+    A_VM <--> A_REPO
+    B_GLA --> B_VM
+    B_VM <--> B_REPO
+
+    %% Database
+    S1 <-->|Read/Write| S2
+    S4 <-->|Read changes| S2
+
+    %% Message coordination
+    S1 -->|Publish changes| S5
+    S5 -->|Broadcast to clients| S4
+
+    %% Background - FCM
+    S1 -->|Trigger notification<br/>when data changes| S3
+    S3 -->|Send push message| FCM
+    FCM -.->|Wake app in background<br/>trigger REST sync| A_REPO
+    FCM -.->|Wake app in background<br/>trigger REST sync| B_REPO
+
+    %% Local caching
+    A_REPO <-->|Cache locally| A_ROOM
+    B_REPO <-->|Cache locally| B_ROOM
+
+    %% Lifecycle management
+    A_GLA -.->|onResume: Connect WS<br/>onPause: Disconnect WS| A_WS
+    B_GLA -.->|onResume: Connect WS<br/>onPause: Disconnect WS| B_WS
+
+    style S1 fill:#87CEEB
+    style S2 fill:#87CEEB
+    style S3 fill:#87CEEB
+    style S4 fill:#87CEEB
+    style S5 fill:#87CEEB
+    style FCM fill:#FFA500
+    style A_ROOM fill:#90EE90
+    style B_ROOM fill:#90EE90
+    style A_REPO fill:#4CAF50
+    style B_REPO fill:#4CAF50
+    style A_VM fill:#6BCF7F
+    style B_VM fill:#6BCF7F
+    style A_WS fill:#FFD700
+    style B_WS fill:#FFD700
+
+    note1[Note: Best of both worlds<br/>Instant updates when using app<br/>Battery efficient when backgrounded<br/>GroceryListActivity manages WS lifecycle<br/>FCM only for background wake-up]
