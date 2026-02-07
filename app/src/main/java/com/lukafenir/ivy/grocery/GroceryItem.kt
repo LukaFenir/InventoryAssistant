@@ -1,4 +1,4 @@
-package com.lukafenir.ivy
+package com.lukafenir.ivy.grocery
 
 data class GroceryItem(
     val id: Int,

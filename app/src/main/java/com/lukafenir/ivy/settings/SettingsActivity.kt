@@ -1,4 +1,4 @@
-package com.lukafenir.ivy
+package com.lukafenir.ivy.settings
 
 import android.content.Context
 import android.content.Intent
@@ -7,6 +7,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
+import com.lukafenir.ivy.grocery.GroceryListActivity
+import com.lukafenir.ivy.home.MainActivity
+import com.lukafenir.ivy.R
 import com.lukafenir.ivy.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
@@ -59,7 +62,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupThemeToggle() {
-        val currentTheme = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getInt(KEY_THEME_MODE, THEME_LIGHT)
+        val currentTheme = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getInt(
+            KEY_THEME_MODE, THEME_LIGHT
+        )
         binding.themeToggleButton.text = if (currentTheme == THEME_LIGHT) {
             getString(R.string.switch_to_dark)
         } else {
@@ -81,7 +86,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun toggleTheme() {
-        val currentTheme = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getInt(KEY_THEME_MODE, THEME_LIGHT)
+        val currentTheme = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getInt(
+            KEY_THEME_MODE, THEME_LIGHT
+        )
         val newTheme = if (currentTheme == THEME_LIGHT) THEME_DARK else THEME_LIGHT
 
         getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit {

@@ -1,4 +1,4 @@
-package com.lukafenir.ivy
+package com.lukafenir.ivy.grocery
 
 import android.content.Context
 import android.content.Intent
@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.lukafenir.ivy.databinding.ActivityGroceryListBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lukafenir.ivy.R
+import com.lukafenir.ivy.home.MainActivity
+import com.lukafenir.ivy.settings.SettingsActivity
 
 class GroceryListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGroceryListBinding
