@@ -6,10 +6,10 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.lukafenir.ivy.databinding.ActivityMainBinding
+import com.lukafenir.ivy.databinding.ActivityGroceryListBinding
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+class GroceryListActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityGroceryListBinding
 
     companion object {
         private const val PREFS_NAME = "theme_prefs"
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         applySavedTheme()
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityGroceryListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupNavigation()
@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        binding.navigationBar.listButton.setOnClickListener {
-            val intent = Intent(this, GroceryListActivity::class.java)
+        binding.navigationBar.homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.navigationBar.homeButton.isEnabled = false
+        binding.navigationBar.listButton.isEnabled = false
     }
 
     private fun disableTransition() {
@@ -65,5 +65,4 @@ class MainActivity : AppCompatActivity() {
             THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
     }
-
 }

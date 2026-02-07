@@ -27,7 +27,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".InventoryActivity"
+            android:name=".GroceryListActivity"
             android:exported="false" />
 
     </application>

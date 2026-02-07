@@ -1,21 +1,16 @@
 package com.lukafenir.ivy
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.material.button.MaterialButton
+import androidx.core.content.edit
+import com.lukafenir.ivy.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var themeToggleButton: MaterialButton
-    private lateinit var homeButton: MaterialButton
-    private lateinit var inventoryButton: MaterialButton
+    private lateinit var binding: ActivitySettingsBinding
 
     companion object {
         private const val PREFS_NAME = "theme_prefs"
@@ -27,9 +22,9 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         applySavedTheme()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        initializeViews()
         setupNavigation()
         setupThemeToggle()
         disableTransition()
@@ -40,28 +35,18 @@ class SettingsActivity : AppCompatActivity() {
         disableTransition()
     }
 
-    private fun initializeViews() {
-        themeToggleButton = findViewById(R.id.themeToggleButton)
-        homeButton = findViewById(R.id.homeButton)
-        inventoryButton = findViewById(R.id.inventoryButton)
-        val settingsButton: MaterialButton = findViewById(R.id.settingsButton)
-        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-
-        // Disable settings button since we're on the settings screen
-        settingsButton.isEnabled = false
-        updateThemeButtonText()
-    }
-
     private fun setupNavigation() {
-        homeButton.setOnClickListener {
+        binding.navigationBar.homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
-        inventoryButton.setOnClickListener {
-            val intent = Intent(this, InventoryActivity::class.java)
+        binding.navigationBar.listButton.setOnClickListener {
+            val intent = Intent(this, GroceryListActivity::class.java)
             startActivity(intent)
         }
+
+        binding.navigationBar.settingsButton.isEnabled = false
     }
 
     private fun disableTransition() {
@@ -74,7 +59,13 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupThemeToggle() {
-        themeToggleButton.setOnClickListener {
+        val currentTheme = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getInt(KEY_THEME_MODE, THEME_LIGHT)
+        binding.themeToggleButton.text = if (currentTheme == THEME_LIGHT) {
+            getString(R.string.switch_to_dark)
+        } else {
+            getString(R.string.switch_to_light)
+        }
+        binding.themeToggleButton.setOnClickListener {
             toggleTheme()
         }
     }
@@ -90,31 +81,16 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun toggleTheme() {
-        val currentTheme = sharedPreferences.getInt(KEY_THEME_MODE, THEME_LIGHT)
+        val currentTheme = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getInt(KEY_THEME_MODE, THEME_LIGHT)
         val newTheme = if (currentTheme == THEME_LIGHT) THEME_DARK else THEME_LIGHT
 
-        sharedPreferences.edit()
-            .putInt(KEY_THEME_MODE, newTheme)
-            .apply()
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit {
+            putInt(KEY_THEME_MODE, newTheme)
+        }
 
         when (newTheme) {
             THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
-    }
-
-    private fun updateThemeButtonText() {
-        val currentTheme = sharedPreferences.getInt(KEY_THEME_MODE, THEME_LIGHT)
-        val buttonText = if (currentTheme == THEME_LIGHT) {
-            getString(R.string.switch_to_dark)
-        } else {
-            getString(R.string.switch_to_light)
-        }
-        themeToggleButton.text = buttonText
-    }
-
-    override fun onResume() {
-        super.onResume()
-        updateThemeButtonText()
     }
 }

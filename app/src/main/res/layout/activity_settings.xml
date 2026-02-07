@@ -52,6 +52,8 @@
     </LinearLayout>
 
     <!-- Navigation Bar -->
-    <include layout="@layout/navigation_bar" />
+    <include
+        android:id="@+id/navigationBar"
+        layout="@layout/navigation_bar" />
 
 </LinearLayout>

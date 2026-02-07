@@ -17,32 +17,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/inventory_title"
+            android:text="@string/grocery_list_title"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/inventory_subtitle"
-            android:textSize="16sp"
-            android:textColor="?attr/colorOnSurface"
-            android:alpha="0.7" />
+            android:textColor="?attr/colorOnSurface" />
 
     </LinearLayout>
 
-    <!-- Inventory List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/inventoryRecyclerView"
+    <!-- Empty space for content -->
+    <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="8dp"
         android:background="?attr/android:colorBackground" />
 
     <!-- Navigation Bar -->
-    <include layout="@layout/navigation_bar" />
+    <include
+        android:id="@+id/navigationBar"
+        layout="@layout/navigation_bar" />
 
 </LinearLayout>

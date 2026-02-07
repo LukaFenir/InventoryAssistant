@@ -29,11 +29,11 @@
         style="@style/Widget.MaterialComponents.Button.TextButton" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/inventoryButton"
+        android:id="@+id/listButton"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_weight="1"
-        android:text="@string/inventory"
+        android:text="@string/list"
         android:textSize="12sp"
         android:textAllCaps="false"
         android:textColor="@color/button_text_color"

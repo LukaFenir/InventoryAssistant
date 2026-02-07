@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hello_world"
+            android:text="@string/ivy"
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="?attr/colorOnSurface"
@@ -48,6 +48,8 @@
     </LinearLayout>
 
     <!-- Navigation Bar -->
-    <include layout="@layout/navigation_bar" />
+    <include
+        android:id="@+id/navigationBar"
+        layout="@layout/navigation_bar" />
 
 </LinearLayout>
