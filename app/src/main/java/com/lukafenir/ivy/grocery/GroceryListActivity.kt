@@ -6,14 +6,21 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.lukafenir.ivy.databinding.ActivityGroceryListBinding
+import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.lukafenir.ivy.R
+import com.lukafenir.ivy.databinding.ActivityGroceryListBinding
 import com.lukafenir.ivy.home.MainActivity
 import com.lukafenir.ivy.settings.SettingsActivity
+import kotlinx.coroutines.launch
 
 class GroceryListActivity : AppCompatActivity() {
+
+    private val viewModel: GroceryViewModel by viewModels()
+    private lateinit var adapter: GroceryAdapter
+
     private lateinit var binding: ActivityGroceryListBinding
 
     companion object {
@@ -31,6 +38,7 @@ class GroceryListActivity : AppCompatActivity() {
 
         setupNavigation()
         setupRecyclerView()
+        setupAddItem()
         disableTransition()
     }
 
@@ -54,9 +62,29 @@ class GroceryListActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        val groceryRecyclerView: RecyclerView = findViewById(R.id.groceryRecyclerView)
-        groceryRecyclerView.layoutManager = LinearLayoutManager(this)
-        groceryRecyclerView.adapter = GroceryAdapter(SampleData.getSampleGroceries()) // Replace with your data
+        adapter = GroceryAdapter { item, isChecked ->
+            viewModel.setChecked(item.id, isChecked)
+        }
+        binding.groceryRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.groceryRecyclerView.adapter = adapter
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.allItems.collect { items ->
+                    adapter.submitList(items)
+                }
+            }
+        }
+    }
+
+    private fun setupAddItem() {
+        binding.addButton.setOnClickListener {
+            val name = binding.itemNameInput.text.toString().trim()
+            if(name.isNotBlank()) {
+                viewModel.addItem(name)
+                binding.itemNameInput.text.clear()
+            }
+        }
     }
 
     private fun disableTransition() {

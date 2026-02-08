@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -24,7 +24,6 @@
 
     </LinearLayout>
 
-    <!-- Empty space for content -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/groceryRecyclerView"
         android:layout_width="match_parent"
@@ -32,6 +31,33 @@
         android:layout_weight="1"
         />
 
+    <!-- Input Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="?attr/colorSurface">
+
+        <EditText
+            android:id="@+id/itemNameInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:hint="Add item"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            />
+
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            />
+
+    </LinearLayout>
 
     <!-- Navigation Bar -->
     <include

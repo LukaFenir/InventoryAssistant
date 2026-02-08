@@ -1,21 +1,12 @@
 package com.lukafenir.ivy.grocery
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "grocery_items")
 data class GroceryItem(
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val name: String,
     val isChecked: Boolean = false
 )
-
-object SampleData {
-    fun getSampleGroceries(): List<GroceryItem> {
-        return listOf(
-            GroceryItem(1, "Apples"),
-            GroceryItem(2, "Bananas"),
-            GroceryItem(3, "Milk"),
-            GroceryItem(4, "Bread"),
-            GroceryItem(5, "Eggs"),
-            GroceryItem(6, "Chicken Breast"),
-            GroceryItem(7, "Rice")
-        )
-    }
-}
