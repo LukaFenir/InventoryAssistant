@@ -5,17 +5,17 @@ This document outlines the planned evolution of the shopping list app's sync arc
 ## Overview
 
 The app will evolve through five iterations:
-0. **Current/Foundation**: Basic app structure with static UI, no database or persistence yet
+0. **Foundation**: Basic app structure with static UI, no database or persistence
 1. **Local persistence**: Offline-first app with Room database (no sync)
 2. **First sync implementation**: Firebase for multi-device sync (quick MVP)
 3. **Independence**: Custom REST API with polling and FCM for background
 4. **Real-time optimization**: WebSockets for foreground, FCM for background
 
-**Current Status**: Iteration 0 - basic app shell with navigation and a static grocery list UI. Room database is the first major feature to implement.
+**Current Status**: Iteration 1 - offline-first app with Room database for local persistence. The grocery list supports adding and checking off items, with data persisted locally.
 
-## Iteration 0: Basic App Shell (Current)
+## Iteration 0: Basic App Shell
 
-**Status**: 🔨 In Development
+**Status**: ✅ Complete
 
 **Goal**: Establish the basic app structure, navigation, and static UI before introducing any database or persistence.
 
@@ -23,25 +23,19 @@ The app will evolve through five iterations:
 - Static UI with hardcoded/in-memory data
 - No database or persistence (data lost on app restart)
 - Navigation between screens
-- Learning Jetpack Compose and Android fundamentals
+- Learning Android fundamentals
 
-**What Exists Now**:
+**What Was Built**:
 - Bottom navigation bar (Home, List, Settings)
 - Static grocery list with checkboxes
 - Basic MVVM structure
-- Hilt dependency injection setup
-
-**What's Missing (Next: Iteration 1)**:
-- No Room database
-- No data persistence
-- No repository pattern
-- Data is not saved between sessions
+- XML layouts with ViewBinding
 
 ---
 
-## Iteration 1: Offline-First with Room Database (Next)
+## Iteration 1: Offline-First with Room Database (Current)
 
-**Status**: 🔄 Planned (Next Step)
+**Status**: ✅ Complete
 
 ![Iteration 1 Architecture](iteration-1-offline-first.mermaid)
 
@@ -52,21 +46,22 @@ The app will evolve through five iterations:
 - Fully functional offline
 - Clean architecture foundation
 - Data persisted locally with Room
+- Manual dependency creation (singleton pattern, direct instantiation)
 
 **Key Components**:
 - **Room Database**: Local SQLite database
   - `GroceryItem` entity (id: Int, name: String, isChecked: Boolean)
   - `GroceryDao` for CRUD operations
-- **GroceryViewModel**: Business logic, state management
+- **GroceryViewModel**: Business logic, state management (extends AndroidViewModel)
 - **GroceryRepository**: Abstract data access (will make adding sync easier later)
 - **GroceryListActivity + GroceryAdapter**: XML layouts with ViewBinding and RecyclerView
 
-**Features to Implement**:
-- Create/edit/delete shopping lists
-- Add/edit/delete items in a list
-- Check off items as purchased
-- Persist data locally with Room
-- Basic UI with Compose
+**Features**:
+- ✅ Add items to the list
+- ✅ Check off items as purchased
+- ✅ Persist data locally with Room
+- ✅ XML UI with ViewBinding and RecyclerView
+- ✅ Light/dark theme toggle (Settings screen)
 
 **Why This Matters**:
 - Room database becomes the **single source of truth** for all future iterations
@@ -90,9 +85,9 @@ This architecture makes it trivial to add Firebase or REST API later - you just 
 
 ---
 
-## Iteration 2: Firebase Implementation (Planned First Sync)
+## Iteration 2: Firebase Implementation (Next)
 
-**Status**: 🔮 Planned
+**Status**: 🔨 In Development
 
 ![Iteration 2 Architecture](iteration-2-firebase.mermaid)
 
@@ -105,7 +100,7 @@ This architecture makes it trivial to add Firebase or REST API later - you just 
 - **Perfect for learning Android development without backend complexity**
 
 **Why Start Here**:
-- Focus on Android development (MVVM, Room, Compose, etc.) without building backend
+- Focus on Android development (MVVM, Room, etc.) without building backend
 - Get working multi-device sync quickly to validate the app concept
 - Learn how real-time sync should work before building your own
 - Can always migrate later once you've proven the app is useful
@@ -117,8 +112,8 @@ This architecture makes it trivial to add Firebase or REST API later - you just 
 - Room database for local caching and offline support (already built!)
 
 **Migration Path from Iteration 1**:
-1. Add Firebase dependencies to your app
-2. Set up Firebase project and add config files
+1. Set up Firebase project and add config files
+2. Add Firebase dependencies to your app
 3. Implement Firebase Auth (email/password or anonymous)
 4. Create Firestore data structure matching your Room schema:
    ```
@@ -301,18 +296,18 @@ This architecture makes it trivial to add Firebase or REST API later - you just 
 - **WebSocket**: OkHttp WebSocket or Scarlet
 - **FCM**: Firebase Cloud Messaging SDK
 - **Local DB**: Room
-- **Dependency Injection**: Hilt (already using)
+- **Dependency Injection**: Manual (singleton pattern, direct instantiation)
 
 ---
 
 ## Recommended Timeline
 
-1. **Phase 0** (Current): Basic app shell
-   - Set up Android project with Hilt and Compose
+1. **Phase 0** (Complete): Basic app shell
+   - Set up Android project structure
    - Build navigation and static UI
-   - Learn Jetpack Compose fundamentals
+   - XML layouts with ViewBinding
 
-2. **Phase 1** (Next): Add Room database for local persistence
+2. **Phase 1** (Current): Add Room database for local persistence
    - Implement Room database schema
    - Build Repository pattern and DAOs
    - Wire ViewModels to real data
