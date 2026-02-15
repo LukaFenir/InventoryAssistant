@@ -27,6 +27,12 @@ Inventory Assistant (Ivy) is an educational Android project built as a hands-on 
 - **Min SDK:** 24 (Android 7.0)
 - **Target SDK:** 36 (Android 16)
 
+## Getting Started
+
+1. Clone the repository
+2. Download `google-services.json` from the [Firebase Console](https://console.firebase.google.com/) for this project and place it in the `app/` directory
+3. Open the project in Android Studio and sync Gradle
+
 ## Status
 
 This is a work in progress. Data is persisted locally using Room. Planned next steps include device sync and additional list management features such as deleting and reordering items.
