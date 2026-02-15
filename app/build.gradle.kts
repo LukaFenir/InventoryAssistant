@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -8,7 +9,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.lukafenir.inventoryassistant"
+        applicationId = "com.lukafenir.ivy"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -48,6 +49,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     ksp(libs.androidx.room.compiler)
+
+    implementation(platform(libs.firebase.bom))
+    // TODO: Add the dependencies for Firebase products you want to use
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
