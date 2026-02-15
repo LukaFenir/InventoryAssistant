@@ -25,7 +25,7 @@ Inventory Assistant (Ivy) is an educational Android project built as a hands-on 
 - **Data layer:** Repository pattern to abstract data access from the UI
 - **Reactive state:** Kotlin Flow and StateFlow for real-time UI updates
 - **Min SDK:** 24 (Android 7.0)
-- **Target SDK:** 35 (Android 15)
+- **Target SDK:** 36 (Android 16)
 
 ## Status
 
