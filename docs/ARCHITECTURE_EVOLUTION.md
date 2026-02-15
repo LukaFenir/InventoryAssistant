@@ -46,13 +46,13 @@ The app will evolve through five iterations:
 - Fully functional offline
 - Clean architecture foundation
 - Data persisted locally with Room
-- Manual dependency creation (singleton pattern, direct instantiation)
+- Constructor injection via ViewModelFactory (repository interface injected into ViewModel)
 
 **Key Components**:
 - **Room Database**: Local SQLite database
   - `GroceryItem` entity (id: Int, name: String, isChecked: Boolean)
   - `GroceryDao` for CRUD operations
-- **GroceryViewModel**: Business logic, state management (extends AndroidViewModel)
+- **GroceryViewModel**: Business logic, state management
 - **GroceryRepository**: Abstract data access (will make adding sync easier later)
 - **GroceryListActivity + GroceryAdapter**: XML layouts with ViewBinding and RecyclerView
 

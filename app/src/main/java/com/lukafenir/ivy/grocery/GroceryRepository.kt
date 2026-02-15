@@ -2,23 +2,16 @@ package com.lukafenir.ivy.grocery
 
 import kotlinx.coroutines.flow.Flow
 
-class GroceryRepository(private val groceryDao: GroceryDao) {
+interface GroceryRepository {
 
-    val allItems: Flow<List<GroceryItem>> = groceryDao.getAllItems()
+    val allItems: Flow<List<GroceryItem>>
 
-    suspend fun insert(item: GroceryItem){
-        groceryDao.insertItem(item)
-    }
+    suspend fun insert(item: GroceryItem)
 
-    suspend fun update(item: GroceryItem){
-        groceryDao.updateItem(item)
-    }
+    suspend fun update(item: GroceryItem)
 
-    suspend fun delete(item: GroceryItem){
-        groceryDao.deleteItem(item)
-    }
+    suspend fun delete(item: GroceryItem)
 
-    suspend fun setChecked(id: Int, isChecked: Boolean){
-        groceryDao.setChecked(id, isChecked)
-    }
+    suspend fun setChecked(id: Int, isChecked: Boolean)
+
 }

@@ -2,6 +2,7 @@
 
 ## Architecture
 - Dependency injection (Hilt or Koin) — right now dependencies are manually constructed. DI would make the app more testable and is a natural next step.
+    - The factory pisses me off. Would Hilt be better?
 - Multiple lists — e.g. separate lists for different shops or weeks. Introduces relational data (one-to-many) in Room and more complex state management.
 - Offline-first sync — using WorkManager to queue changes and sync to a remote backend when online. This is where architecture gets genuinely hard (conflict resolution, retry strategies).
 - Home screen widget — a quick-glance shopping list widget. Widgets have their own lifecycle and data access patterns, quite different from Activities.

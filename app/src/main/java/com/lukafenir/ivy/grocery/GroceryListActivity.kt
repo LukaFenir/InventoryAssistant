@@ -18,7 +18,9 @@ import kotlinx.coroutines.launch
 
 class GroceryListActivity : AppCompatActivity() {
 
-    private val viewModel: GroceryViewModel by viewModels()
+    private val viewModel: GroceryViewModel by viewModels {
+        GroceryViewModelFactory(RoomGroceryRepository(GroceryDatabase.getDatabase(this).groceryDao()))
+    }
     private lateinit var adapter: GroceryAdapter
 
     private lateinit var binding: ActivityGroceryListBinding
