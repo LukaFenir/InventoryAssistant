@@ -1,0 +1,24 @@
+name: PR Build
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  prBuild:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build and run unit tests
+        run: ./gradlew build

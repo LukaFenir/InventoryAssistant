@@ -37,6 +37,13 @@ android {
     }
 }
 
+tasks.withType<Test> {
+    testLogging {
+        events("passed", "failed", "skipped")
+    }
+    outputs.upToDateWhen { false }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -50,6 +57,9 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.room.testing)
 }
