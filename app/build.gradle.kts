@@ -37,6 +37,13 @@ android {
     }
 }
 
+tasks.withType<Test> {
+    testLogging {
+        events("passed", "failed", "skipped")
+    }
+    outputs.upToDateWhen { false }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
