@@ -7,10 +7,11 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class GroceryViewModelTest {
@@ -19,14 +20,14 @@ class GroceryViewModelTest {
     private lateinit var viewModel: GroceryViewModel
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    @Before
+    @BeforeEach
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         repository = FakeGroceryRepository()
         viewModel = GroceryViewModel(repository)
     }
 
-    @After
+    @AfterEach
     fun tearDown() {
         Dispatchers.resetMain()
     }
@@ -39,9 +40,9 @@ class GroceryViewModelTest {
         viewModel.addItem("Milk")
 
         val items = viewModel.allItems.value
-        assertEquals("Should be one item", 1, items.size)
-        assertEquals("The item's name should be Milk", "Milk", items[0].name)
-        assertEquals("The item should be unchecked", false, items[0].isChecked)
+        assertEquals(1, items.size, "Should be one item")
+        assertEquals("Milk", items[0].name, "The item's name should be Milk")
+        assertEquals(false, items[0].isChecked, "The item should be unchecked")
 
         collectJob.cancel()
     }
@@ -56,8 +57,8 @@ class GroceryViewModelTest {
         viewModel.setChecked(viewModel.allItems.value[0].id, true)
 
         val items = viewModel.allItems.value
-        assertEquals("Should be one item", 1, items.size)
-        assertEquals("The item should be checked", true, items[0].isChecked)
+        assertEquals(1, items.size, "Should be one item")
+        assertEquals(true, items[0].isChecked, "The item should be checked")
 
         collectJob.cancel()
     }
@@ -71,13 +72,13 @@ class GroceryViewModelTest {
         viewModel.addItem("Cheese")
         viewModel.addItem("Banana")
 
-        assertEquals("Should be three items", 3, viewModel.allItems.value.size)
+        assertEquals(3, viewModel.allItems.value.size, "Should be three items")
 
         viewModel.deleteItem(viewModel.allItems.value[1])
         val items = viewModel.allItems.value
-        assertEquals("Should be two items", 2, items.size)
-        assertEquals("The first item's name should be Milk", "Milk", items[0].name)
-        assertEquals("The second item's name should be Banana", "Banana", items[1].name)
+        assertEquals(2, items.size, "Should be two items")
+        assertEquals("Milk", items[0].name, "The first item's name should be Milk")
+        assertEquals("Banana", items[1].name, "The second item's name should be Banana")
 
         collectJob.cancel()
     }
