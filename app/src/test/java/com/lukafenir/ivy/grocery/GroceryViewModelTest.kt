@@ -33,6 +33,7 @@ class GroceryViewModelTest {
     }
 
     @Test
+    @DisplayName("WHEN addItem called THEN inserts item into repository")
     fun addItem_insertsItemIntoRepository() = runTest {
         // Start a subscriber so WhileSubscribed activates the upstream Flow
         val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
@@ -48,6 +49,7 @@ class GroceryViewModelTest {
     }
 
     @Test
+    @DisplayName("WHEN setChecked called THEN item is checked")
     fun setChecked_updatesItemInRepositoryToChecked() = runTest {
         // Start a subscriber so WhileSubscribed activates the upstream Flow
         val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
@@ -64,6 +66,7 @@ class GroceryViewModelTest {
     }
 
     @Test
+    @DisplayName("WHEN deleteItem called THEN item is deleted from repository")
     fun deleteItem_deletesItemFromRepository() = runTest {
         // Start a subscriber so WhileSubscribed activates the upstream Flow
         val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
