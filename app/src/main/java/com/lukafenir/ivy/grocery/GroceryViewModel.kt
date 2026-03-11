@@ -17,7 +17,9 @@ class GroceryViewModel(private val repository: GroceryRepository) : ViewModel() 
 
     fun addItem(name: String) {
         viewModelScope.launch {
-            repository.insert(GroceryItem(name = name))
+            if(name.isNotBlank()) {
+                repository.insert(GroceryItem(name = name.trim()))
+            }
         }
     }
 

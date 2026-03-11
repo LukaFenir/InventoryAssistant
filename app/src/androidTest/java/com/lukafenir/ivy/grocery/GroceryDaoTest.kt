@@ -32,6 +32,13 @@ class GroceryDaoTest {
     }
 
     @Test
+    fun getAllItemsOnEmptyDatabase_returnsEmptyList() = runTest {
+        val items = dao.getAllItems().first()
+
+        assertEquals("Should be zero items", 0, items.size)
+    }
+
+    @Test
     fun insertItem_appearsInGetAllItems() = runTest {
         dao.insertItem(GroceryItem(name = "Milk"))
 
@@ -76,6 +83,21 @@ class GroceryDaoTest {
         val deletedItems = dao.getAllItems().first()
         assertEquals("There should be one item", 1, deletedItems.size)
         assertEquals("The item should be named Cheese", "Cheese", deletedItems[0].name)
+    }
+
+    @Test
+    fun deletingNonexistentItem_removesNothing() = runTest {
+        dao.insertItem(GroceryItem(name = "Milk"))
+        dao.insertItem(GroceryItem(name = "Cheese"))
+
+        val items = dao.getAllItems().first()
+        assertEquals("There should be two items to begin with", 2, items.size)
+        dao.deleteItem(GroceryItem(name = "Cake"))
+
+        val deletedItems = dao.getAllItems().first()
+        assertEquals("There should be two items still", 2, deletedItems.size)
+        assertEquals("The first item should be named Milk", "Milk", deletedItems[0].name)
+        assertEquals("The second item should be named Cheese", "Cheese", deletedItems[1].name)
     }
 
     @Test

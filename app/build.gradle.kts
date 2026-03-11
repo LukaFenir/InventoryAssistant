@@ -38,6 +38,7 @@ android {
 }
 
 tasks.withType<Test> {
+    useJUnitPlatform()
     testLogging {
         events("passed", "failed", "skipped")
     }
@@ -56,7 +57,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     ksp(libs.androidx.room.compiler)
 
-    testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
