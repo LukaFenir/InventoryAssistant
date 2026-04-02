@@ -19,7 +19,9 @@ import kotlinx.coroutines.launch
 class GroceryListActivity : AppCompatActivity() {
 
     private val viewModel: GroceryViewModel by viewModels {
-        GroceryViewModelFactory(RoomGroceryRepository(GroceryDatabase.getDatabase(this).groceryDao()))
+        val local = RoomGroceryRepository(GroceryDatabase.getDatabase(this).groceryDao())
+        val remote = FirestoreGroceryRepository()
+        GroceryViewModelFactory(SyncedGroceryRepository(local, remote))
     }
     private lateinit var adapter: GroceryAdapter
 
