@@ -9,6 +9,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -47,9 +48,10 @@ class FirestoreGroceryRepositoryTest {
         every { itemsCollection.document("1") } returns itemDocument
         every { itemDocument.set(any()) } returns voidTask
 
-        repository.insert(item)
+        val insertedId = repository.insert(item)
 
         verify { itemDocument.set(mapOf("name" to "Milk", "isChecked" to false)) }
+        assertEquals(1, insertedId)
     }
 
     @Test

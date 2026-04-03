@@ -14,7 +14,7 @@ interface GroceryDao {
     fun getAllItems(): Flow<List<GroceryItem>>
 
     @Insert
-    suspend fun insertItem(item: GroceryItem)
+    suspend fun insertItem(item: GroceryItem): Long
 
     @Update
     suspend fun updateItem(item: GroceryItem)

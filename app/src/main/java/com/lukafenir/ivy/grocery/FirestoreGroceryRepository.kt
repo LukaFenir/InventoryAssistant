@@ -16,8 +16,9 @@ class FirestoreGroceryRepository(private val firestore: FirebaseFirestore = Fire
     override val allItems: Flow<List<GroceryItem>> = callbackFlow {
     }
 
-    override suspend fun insert(item: GroceryItem) {
+    override suspend fun insert(item: GroceryItem) : Long {
         itemsCollection.document(item.id.toString()).set(item.toMap()).await()
+        return item.id.toLong()
     }
 
     override suspend fun update(item: GroceryItem) {

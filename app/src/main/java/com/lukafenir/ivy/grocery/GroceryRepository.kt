@@ -6,7 +6,7 @@ interface GroceryRepository {
 
     val allItems: Flow<List<GroceryItem>>
 
-    suspend fun insert(item: GroceryItem)
+    suspend fun insert(item: GroceryItem): Long
 
     suspend fun update(item: GroceryItem)
 

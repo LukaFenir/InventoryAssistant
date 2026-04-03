@@ -11,10 +11,11 @@ class SyncedGroceryRepository (
     override val allItems: Flow<List<GroceryItem>>
         get() = local.allItems
 
-    override suspend fun insert(item: GroceryItem) {
-        local.insert(item)
-        remote.insert(item)
+    override suspend fun insert(item: GroceryItem) : Long {
+        val generatedId = local.insert(item)
+        remote.insert(item.copy(id = generatedId.toInt()))
         Log.d("SyncedGroceryRepository", "Item inserted in local and remote: $item")
+        return generatedId
     }
 
     override suspend fun update(item: GroceryItem) {
