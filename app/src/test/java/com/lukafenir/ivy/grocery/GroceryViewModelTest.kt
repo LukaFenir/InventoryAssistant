@@ -140,9 +140,8 @@ class GroceryViewModelTest {
     }
 
     @Test
-    @DisplayName("WHEN deleteItem called THEN item is deleted from repository")
-    fun deleteItem_deletesItemFromRepository() = runTest {
-        // Start a subscriber so WhileSubscribed activates the upstream Flow
+    @DisplayName("WHEN deleteSelected called THEN selected items are deleted from repository")
+    fun deleteSelected_deletesSelectedItemsFromRepository() = runTest {
         val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
 
         viewModel.addItem("Milk")
@@ -151,12 +150,74 @@ class GroceryViewModelTest {
 
         assertEquals(3, viewModel.allItems.value.size, "Should be three items")
 
-        viewModel.deleteItem(viewModel.allItems.value[1])
+        val milkId = viewModel.allItems.value[0].id
+        val bananaId = viewModel.allItems.value[2].id
+        viewModel.toggleSelection(milkId)
+        viewModel.toggleSelection(bananaId)
+        viewModel.deleteSelected()
+
         val items = viewModel.allItems.value
-        assertEquals(2, items.size, "Should be two items")
-        assertEquals("Milk", items[0].name, "The first item's name should be Milk")
-        assertEquals("Banana", items[1].name, "The second item's name should be Banana")
+        assertEquals(1, items.size, "Should be one item remaining")
+        assertEquals("Cheese", items[0].name, "Only Cheese should remain")
 
         collectJob.cancel()
     }
+
+    @Test
+    @DisplayName("WHEN deleteSelected called THEN selection is cleared")
+    fun deleteSelected_clearsSelection() = runTest {
+        val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
+        val selectionJob = launch(testDispatcher) { viewModel.selectedIds.collect {} }
+
+        viewModel.addItem("Milk")
+        viewModel.toggleSelection(viewModel.allItems.value[0].id)
+        viewModel.deleteSelected()
+
+        assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be empty after delete")
+
+        collectJob.cancel()
+        selectionJob.cancel()
+    }
+
+    @Test
+    @DisplayName("WHEN clearSelected called THEN selected items are not deleted from repository")
+    fun clearSelection_doesNotDeleteSelectedItems() = runTest {
+        val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
+        val selectionJob = launch(testDispatcher) { viewModel.selectedIds.collect {} }
+
+        viewModel.addItem("Milk")
+        viewModel.addItem("Cheese")
+        viewModel.addItem("Banana")
+
+        assertEquals(3, viewModel.allItems.value.size, "Should be three items")
+
+        val milkId = viewModel.allItems.value[0].id
+        val bananaId = viewModel.allItems.value[2].id
+        viewModel.toggleSelection(milkId)
+        viewModel.toggleSelection(bananaId)
+        viewModel.clearSelection()
+
+        assertEquals(3, viewModel.allItems.value.size, "Should be three items still")
+
+        collectJob.cancel()
+        selectionJob.cancel()
+    }
+
+    @Test
+    @DisplayName("WHEN clearSelected called THEN selection is cleared")
+    fun clearSelection_clearsSelection() = runTest {
+        val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
+        val selectionJob = launch(testDispatcher) { viewModel.selectedIds.collect {} }
+
+        viewModel.addItem("Milk")
+        viewModel.toggleSelection(viewModel.allItems.value[0].id)
+
+        viewModel.clearSelection()
+
+        assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be empty after delete")
+
+        collectJob.cancel()
+        selectionJob.cancel()
+    }
+
 }

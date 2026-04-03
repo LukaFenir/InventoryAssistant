@@ -21,4 +21,5 @@
 
     <!-- Inventory Screen -->
     <string name="grocery_list_title">Grocery List</string>
+    <string name="items_selected">%1$d selected</string>
 </resources>

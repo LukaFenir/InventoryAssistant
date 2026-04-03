@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.activity.viewModels
@@ -11,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lukafenir.ivy.R
 import com.lukafenir.ivy.databinding.ActivityGroceryListBinding
 import com.lukafenir.ivy.home.MainActivity
 import com.lukafenir.ivy.settings.SettingsActivity
@@ -43,6 +46,7 @@ class GroceryListActivity : AppCompatActivity() {
         setupNavigation()
         setupRecyclerView()
         setupAddItem()
+        setupSelectionMode()
         disableTransition()
     }
 
@@ -66,9 +70,15 @@ class GroceryListActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = GroceryAdapter { item, isChecked ->
-            viewModel.setChecked(item.id, isChecked)
-        }
+        adapter = GroceryAdapter(
+            onCheckedChanged = { item, isChecked -> viewModel.setChecked(item.id, isChecked) },
+            onLongClick = { item ->
+                if (!viewModel.isInSelectionMode.value) {
+                    viewModel.toggleSelection(item.id)
+                }
+            },
+            onItemClick = { item -> viewModel.toggleSelection(item.id) }
+        )
         binding.groceryRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.groceryRecyclerView.adapter = adapter
 
@@ -76,6 +86,42 @@ class GroceryListActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.allItems.collect { items ->
                     adapter.submitList(items)
+                }
+            }
+        }
+    }
+
+    private fun setupSelectionMode() {
+        binding.cancelSelectionButton.setOnClickListener {
+            viewModel.clearSelection()
+        }
+
+        binding.deleteSelectedButton.setOnClickListener {
+            viewModel.deleteSelected()
+        }
+
+        val backCallback = object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() {
+                viewModel.clearSelection()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, backCallback)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isInSelectionMode.collect { inSelectionMode ->
+                    binding.normalHeader.visibility = if (inSelectionMode) View.GONE else View.VISIBLE
+                    binding.selectionBar.visibility = if (inSelectionMode) View.VISIBLE else View.GONE
+                    backCallback.isEnabled = inSelectionMode
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedIds.collect { ids ->
+                    adapter.updateSelection(ids)
+                    binding.selectionCountText.text = getString(R.string.items_selected, ids.size)
                 }
             }
         }
