@@ -11,10 +11,11 @@ class FakeGroceryRepository : GroceryRepository {
 
     override val allItems: Flow<List<GroceryItem>> = itemsFlow
 
-    override suspend fun insert(item: GroceryItem) {
-        val newItem = item.copy(id = nextId++)
-        items.add(newItem)
+    override suspend fun insert(item: GroceryItem): Long {
+        val assignedId = nextId++
+        items.add(item.copy(id = assignedId))
         itemsFlow.value = items.toList()
+        return assignedId.toLong()
     }
 
     override suspend fun update(item: GroceryItem) {

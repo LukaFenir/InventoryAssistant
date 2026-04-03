@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -8,7 +9,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.lukafenir.inventoryassistant"
+        applicationId = "com.lukafenir.ivy"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -29,6 +30,10 @@ android {
 
     buildFeatures {
         viewBinding = true
+    }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
     }
 
     compileOptions {
@@ -57,7 +62,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     ksp(libs.androidx.room.compiler)
 
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
+
+    // TODO: Add the dependencies for Firebase products you want to use
+
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockk)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)

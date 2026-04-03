@@ -6,8 +6,8 @@ class RoomGroceryRepository(private val groceryDao: GroceryDao) : GroceryReposit
 
     override val allItems: Flow<List<GroceryItem>> = groceryDao.getAllItems()
 
-    override suspend fun insert(item: GroceryItem){
-        groceryDao.insertItem(item)
+    override suspend fun insert(item: GroceryItem): Long {
+        return groceryDao.insertItem(item)
     }
 
     override suspend fun update(item: GroceryItem){

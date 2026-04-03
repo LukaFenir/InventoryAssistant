@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,6 +30,15 @@ class GroceryDaoTest {
     @After
     fun tearDown() {
         database.close()
+    }
+
+    @Test
+    fun insertItem_returnsGeneratedId() = runTest {
+        val id = dao.insertItem(GroceryItem(name = "Milk"))
+
+        assertTrue("Insert should return a positive generated ID", id > 0)
+        val items = dao.getAllItems().first()
+        assertEquals("The stored item should have the generated ID", id, items[0].id.toLong())
     }
 
     @Test
