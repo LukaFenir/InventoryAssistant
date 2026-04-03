@@ -14,7 +14,7 @@ class SyncedGroceryRepository (
     override suspend fun insert(item: GroceryItem) {
         local.insert(item)
         remote.insert(item)
-        Log.d("SyncedGroceryRepository", "Item inserted: $item")
+        Log.d("SyncedGroceryRepository", "Item inserted in local and remote: $item")
     }
 
     override suspend fun update(item: GroceryItem) {

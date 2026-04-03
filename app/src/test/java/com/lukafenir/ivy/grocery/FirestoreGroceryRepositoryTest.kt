@@ -1,6 +1,7 @@
 package com.lukafenir.ivy.grocery
 
 import com.google.android.gms.tasks.Task
+import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -11,6 +12,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class FirestoreGroceryRepositoryTest {
 
@@ -48,5 +50,17 @@ class FirestoreGroceryRepositoryTest {
         repository.insert(item)
 
         verify { itemDocument.set(mapOf("name" to "Milk", "isChecked" to false)) }
+    }
+
+    @Test
+    @DisplayName("GIVEN call to firestore fails WHEN insert called THEN exception is thrown")
+    fun insert_throwsExceptionOnFirestoreFailure() = runTest {
+        every { itemsCollection.document("1") } returns itemDocument
+        every { itemDocument.set(any()) } returns voidTask
+        every { voidTask.exception } returns FirebaseException("Firestore error")
+
+        assertThrows<FirebaseException> {
+            repository.insert(GroceryItem(id = 1, name = "Milk"))
+        }
     }
 }

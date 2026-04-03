@@ -32,4 +32,6 @@ class SyncedGroceryRepositoryTest {
         coVerify { local.insert(item) }
         coVerify { remote.insert(item) }
     }
+
+    // No tests for remote failures as the remote implementation handles retries internally
 }
