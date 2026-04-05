@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lukafenir.ivy.R
 import com.lukafenir.ivy.databinding.ActivityGroceryListBinding
 import com.lukafenir.ivy.home.MainActivity
 import com.lukafenir.ivy.settings.SettingsActivity
@@ -90,6 +91,14 @@ class GroceryListActivity : AppCompatActivity() {
                 viewModel.isInSelectionMode.collect { inSelectionMode ->
                     binding.normalHeader.visibility = if (inSelectionMode) View.GONE else View.VISIBLE
                     binding.selectionBar.visibility = if (inSelectionMode) View.VISIBLE else View.GONE
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedIds.collect { ids ->
+                    binding.selectionCountText.text = getString(R.string.items_selected, ids.size)
                 }
             }
         }
