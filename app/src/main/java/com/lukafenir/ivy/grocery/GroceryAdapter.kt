@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukafenir.ivy.R
 
 class GroceryAdapter(
-    private val onCheckedChanged: (GroceryItem, Boolean) -> Unit
+    private val onCheckedChanged: (GroceryItem, Boolean) -> Unit,
+    private val onLongClick: (GroceryItem) -> Unit
 ) : ListAdapter<GroceryItem, GroceryAdapter.ViewHolder>(GroceryDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,6 +29,7 @@ class GroceryAdapter(
         holder.groceryCheckBox.setOnCheckedChangeListener { _, isChecked ->
             onCheckedChanged(item, isChecked)
         }
+        holder.itemView.setOnLongClickListener { onLongClick(item); true }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

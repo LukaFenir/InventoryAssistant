@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.activity.viewModels
@@ -42,6 +43,7 @@ class GroceryListActivity : AppCompatActivity() {
 
         setupNavigation()
         setupRecyclerView()
+        setupSelectionMode()
         setupAddItem()
         disableTransition()
     }
@@ -66,9 +68,10 @@ class GroceryListActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = GroceryAdapter { item, isChecked ->
-            viewModel.setChecked(item.id, isChecked)
-        }
+        adapter = GroceryAdapter(
+            onCheckedChanged = { item, isChecked -> viewModel.setChecked(item.id, isChecked) },
+            onLongClick = { item -> if(!viewModel.isInSelectionMode.value) viewModel.toggleSelection(item.id) }
+        )
         binding.groceryRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.groceryRecyclerView.adapter = adapter
 
@@ -76,6 +79,17 @@ class GroceryListActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.allItems.collect { items ->
                     adapter.submitList(items)
+                }
+            }
+        }
+    }
+
+    private fun setupSelectionMode() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isInSelectionMode.collect { inSelectionMode ->
+                    binding.normalHeader.visibility = if (inSelectionMode) View.GONE else View.VISIBLE
+                    binding.selectionBar.visibility = if (inSelectionMode) View.VISIBLE else View.GONE
                 }
             }
         }
