@@ -71,7 +71,8 @@ class GroceryListActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = GroceryAdapter(
             onCheckedChanged = { item, isChecked -> viewModel.setChecked(item.id, isChecked) },
-            onLongClick = { item -> if(!viewModel.isInSelectionMode.value) viewModel.toggleSelection(item.id) }
+            onLongClick = { item -> if(!viewModel.isInSelectionMode.value) viewModel.toggleSelection(item.id) },
+            onItemClick = { item -> viewModel.toggleSelection(item.id) }
         )
         binding.groceryRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.groceryRecyclerView.adapter = adapter
@@ -98,6 +99,7 @@ class GroceryListActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.selectedIds.collect { ids ->
+                    adapter.updateSelection(ids)
                     binding.selectionCountText.text = getString(R.string.items_selected, ids.size)
                 }
             }
