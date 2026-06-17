@@ -23,7 +23,9 @@ class SyncedGroceryRepository (
     }
 
     override suspend fun delete(item: GroceryItem) {
-        TODO("Not yet implemented")
+        local.delete(item)
+        remote.delete(item)
+        Log.d("SyncedGroceryRepository", "Item deleted from local and remote: $item")
     }
 
     override suspend fun setChecked(id: Int, isChecked: Boolean) {

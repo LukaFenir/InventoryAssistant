@@ -46,6 +46,7 @@ class GroceryListActivity : AppCompatActivity() {
         setupRecyclerView()
         setupSelectionMode()
         setupAddItem()
+        setupDeleteSelectedItems()
         disableTransition()
     }
 
@@ -113,6 +114,12 @@ class GroceryListActivity : AppCompatActivity() {
                 viewModel.addItem(name)
                 binding.itemNameInput.text.clear()
             }
+        }
+    }
+
+    private fun setupDeleteSelectedItems() {
+        binding.deleteSelectedButton.setOnClickListener {
+            viewModel.deleteSelected()
         }
     }
 

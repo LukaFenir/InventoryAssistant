@@ -65,4 +65,39 @@ class FirestoreGroceryRepositoryTest {
             repository.insert(GroceryItem(id = 1, name = "Milk"))
         }
     }
+
+    @Test
+    @DisplayName("WHEN delete called THEN item is removed from Firestore")
+    fun delete_removesItemFromFirestore() = runTest {
+        val (_, itemToDelete, _) = setupItems()
+        every { itemDocument.delete() } returns voidTask
+
+        repository.delete(itemToDelete)
+
+        verify { itemDocument.delete() }
+    }
+
+    @Test
+    @DisplayName("GIVEN call to firestore fails WHEN delete called THEN exception is thrown")
+    fun delete_throwsExceptionOnFirestoreFailure() = runTest {
+        every { itemsCollection.document("1") } returns itemDocument
+        every { itemDocument.delete() } returns voidTask
+        every { voidTask.exception } returns FirebaseException("Firestore error")
+
+        assertThrows<FirebaseException> {
+            repository.delete(GroceryItem(id = 1, name = "Milk"))
+        }
+    }
+
+    private suspend fun setupItems(): List<GroceryItem> {
+        val items = listOf(
+            GroceryItem(id = 1, name = "Milk"),
+            GroceryItem(id = 2, name = "Eggs"),
+            GroceryItem(id = 3, name = "Bread")
+        )
+        every { itemsCollection.document(any()) } returns itemDocument
+        every { itemDocument.set(any()) } returns voidTask
+        items.forEach { repository.insert(it) }
+        return items
+    }
 }

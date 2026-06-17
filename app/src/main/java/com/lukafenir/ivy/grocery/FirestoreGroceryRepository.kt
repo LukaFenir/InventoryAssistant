@@ -26,7 +26,7 @@ class FirestoreGroceryRepository(private val firestore: FirebaseFirestore = Fire
     }
 
     override suspend fun delete(item: GroceryItem) {
-        TODO("Not yet implemented")
+        itemsCollection.document(item.id.toString()).delete().await()
     }
 
     override suspend fun setChecked(id: Int, isChecked: Boolean) {

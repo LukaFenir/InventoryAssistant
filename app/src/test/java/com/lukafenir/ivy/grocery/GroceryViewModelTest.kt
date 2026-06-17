@@ -1,7 +1,9 @@
 package com.lukafenir.ivy.grocery
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -140,23 +142,87 @@ class GroceryViewModelTest {
     }
 
     @Test
-    @DisplayName("WHEN deleteItem called THEN item is deleted from repository")
-    fun deleteItem_deletesItemFromRepository() = runTest {
-        // Start a subscriber so WhileSubscribed activates the upstream Flow
-        val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
+    @DisplayName("WHEN item selected for deletion THEN id added to selected ids")
+    fun toggleSelection_addsIdToSelectedIds() = runTest {
+        val collectJob = setupDeleteTests()
+        val selectedId = viewModel.allItems.value[1].id
 
+        viewModel.toggleSelection(viewModel.allItems.value[1].id)
+
+        assertEquals(viewModel.selectedIds.value, setOf(selectedId))
+
+        collectJob.cancel()
+    }
+
+    @Test
+    @DisplayName("WHEN item selected then deselected for deletion THEN id removed from selected ids")
+    fun toggleSelection_calledTwice_removesIdFromSelectedIds() = runTest {
+        val collectJob = setupDeleteTests()
+        val selectedId = viewModel.allItems.value[1].id
+
+        viewModel.toggleSelection(viewModel.allItems.value[1].id)
+        viewModel.toggleSelection(viewModel.allItems.value[1].id)
+
+        assertEquals(viewModel.selectedIds.value, emptySet<Int>())
+
+        collectJob.cancel()
+    }
+
+    @Test
+    @DisplayName("WHEN deleteSelected called THEN all selected items are deleted from repository")
+    fun deleteSelected_deletesSelectedFromRepository() = runTest {
+        val collectJob = setupDeleteTests()
+
+        viewModel.toggleSelection(viewModel.allItems.value[0].id)
+        viewModel.toggleSelection(viewModel.allItems.value[2].id)
+
+        viewModel.deleteSelected()
+
+        val items = viewModel.allItems.value
+        assertEquals(1, items.size, "Should be one item left after delete")
+        assertEquals("Cheese", items[0].name, "Should be left with Cheese")
+        assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be cleared")
+
+        collectJob.cancel()
+    }
+
+    @Test
+    @DisplayName("WHEN deleteSelected called on empty list THEN no items are deleted from the repository")
+    fun deleteSelectedOnEmpty_deletesNothingFromRepository() = runTest {
+        val collectJob = setupDeleteTests()
+        val allItemsSize = viewModel.allItems.value.size
+
+        viewModel.deleteSelected()
+
+        val items = viewModel.allItems.value
+        assertEquals(allItemsSize, items.size, "None of the items should be deleted")
+        assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be empty regardless")
+
+        collectJob.cancel()
+    }
+
+    @Test
+    @DisplayName("WHEN deleteSelected called when all items selected THEN all items are deleted from repository")
+    fun deleteSelectedAllItems_deletesAllItemsFromRepository() = runTest {
+        val collectJob = setupDeleteTests()
+
+        viewModel.allItems.value.forEach { viewModel.toggleSelection(it.id) }
+
+        viewModel.deleteSelected()
+
+        val items = viewModel.allItems.value
+        assertEquals(0, items.size, "Should have no items left after delete")
+        assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be cleared")
+
+        collectJob.cancel()
+    }
+
+    private fun CoroutineScope.setupDeleteTests(): Job {
+        val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
         viewModel.addItem("Milk")
         viewModel.addItem("Cheese")
         viewModel.addItem("Banana")
-
         assertEquals(3, viewModel.allItems.value.size, "Should be three items")
-
-        viewModel.deleteItem(viewModel.allItems.value[1])
-        val items = viewModel.allItems.value
-        assertEquals(2, items.size, "Should be two items")
-        assertEquals("Milk", items[0].name, "The first item's name should be Milk")
-        assertEquals("Banana", items[1].name, "The second item's name should be Banana")
-
-        collectJob.cancel()
+        return collectJob
     }
 }

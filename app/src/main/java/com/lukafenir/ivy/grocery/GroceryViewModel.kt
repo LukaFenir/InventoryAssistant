@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -39,9 +40,11 @@ class GroceryViewModel(private val repository: GroceryRepository) : ViewModel() 
         }
     }
 
-    fun deleteItem(item: GroceryItem){
+    fun deleteSelected(){
         viewModelScope.launch {
-            repository.delete(item)
+            val items = allItems.value.filter { it.id in _selectedIds.value }
+            items.forEach { repository.delete(it) }
+            _selectedIds.value = emptySet()
         }
     }
 
