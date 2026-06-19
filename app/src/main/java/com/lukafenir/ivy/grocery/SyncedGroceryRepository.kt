@@ -29,6 +29,8 @@ class SyncedGroceryRepository (
     }
 
     override suspend fun setChecked(id: Int, isChecked: Boolean) {
-        TODO("Not yet implemented")
+        local.setChecked(id, isChecked)
+        remote.setChecked(id, isChecked)
+        Log.d("SyncedGroceryRepository", "Item checked in local and remote: $id")
     }
 }

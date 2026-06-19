@@ -89,6 +89,17 @@ class FirestoreGroceryRepositoryTest {
         }
     }
 
+    @Test
+    @DisplayName("WHEN setChecked called THEN item is checked in Firestore")
+    fun setChecked_checksItemInFirestore() = runTest {
+        val (_, itemToCheck, _) = setupItems()
+        every { itemDocument.update(mapOf("isChecked" to true)) } returns voidTask
+
+        repository.setChecked(itemToCheck.id, true)
+
+        verify { itemDocument.update(mapOf("isChecked" to true)) }
+    }
+
     private suspend fun setupItems(): List<GroceryItem> {
         val items = listOf(
             GroceryItem(id = 1, name = "Milk"),

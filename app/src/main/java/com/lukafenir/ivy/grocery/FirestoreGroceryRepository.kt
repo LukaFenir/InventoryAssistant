@@ -30,7 +30,7 @@ class FirestoreGroceryRepository(private val firestore: FirebaseFirestore = Fire
     }
 
     override suspend fun setChecked(id: Int, isChecked: Boolean) {
-        TODO("Not yet implemented")
+        itemsCollection.document(id.toString()).update(mapOf("isChecked" to isChecked))
     }
 
     private fun GroceryItem.toMap() = mapOf(
