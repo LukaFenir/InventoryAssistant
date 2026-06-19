@@ -6,6 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -214,6 +215,21 @@ class GroceryViewModelTest {
         assertEquals(0, items.size, "Should have no items left after delete")
         assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be cleared")
 
+        collectJob.cancel()
+    }
+
+    @Test
+    @DisplayName("WHEN deleteSelected called when multiple items selected THEN deletes are initiated concurrently")
+    fun deleteSelected_allDeletesInitiatedConcurrently() = runTest {
+        val collectJob = setupDeleteTests()
+        repository.shouldHangOnDelete = true
+        viewModel.toggleSelection(viewModel.allItems.value[0].id)
+        viewModel.toggleSelection(viewModel.allItems.value[2].id)
+
+        viewModel.deleteSelected()
+        advanceUntilIdle()
+
+        assertEquals(2, repository.deleteCallCount, "Expected two calls to delete even though they hang")
         collectJob.cancel()
     }
 

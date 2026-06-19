@@ -37,9 +37,9 @@ Iteration roadmap (from `ARCHITECTURE_EVOLUTION.md`):
 
 1. **Cancel (X) button** in selection bar — no click listener wired yet; ViewModel also has no `clearSelection()` method
 
-### Known bugs / performance issues
+### Known bugs
 
-- **UI hangs on delete** — remote Firestore deletes are sequential and blocking; deleting multiple items causes noticeable lag proportional to item count. Remote calls should be parallelized (e.g. `async`/`awaitAll`) or fire-and-forget after optimistic local removal.
+- **Offline delete lost on app close** — if the user deletes an item while offline then force-kills the app, Firestore's queued write is not guaranteed to flush when back online. Fix requires WorkManager (see `docs/IDEAS.md` — Guaranteed remote deletes).
 - **App crashes on checkbox click** — `setChecked()` is `TODO` in both `FirestoreGroceryRepository` and `SyncedGroceryRepository`
 
 ### Tests written
@@ -51,7 +51,6 @@ Iteration roadmap (from `ARCHITECTURE_EVOLUTION.md`):
 
 ## Next priorities
 
-1. **Fix delete UI lag** — parallelize or fire-and-forget Firestore deletes in `deleteSelected()`
-2. **Wire cancel button** — add `clearSelection()` to ViewModel, hook up X button in activity
-3. **Fix checkbox crash** — implement `setChecked()` in `FirestoreGroceryRepository` and `SyncedGroceryRepository`
-4. **Remaining repository TODOs** — `update()`, `setChecked()`, `allItems` Flow in `FirestoreGroceryRepository` and `SyncedGroceryRepository`
+1. **Wire cancel button** — add `clearSelection()` to ViewModel, hook up X button in activity
+2. **Fix checkbox crash** — implement `setChecked()` in `FirestoreGroceryRepository` and `SyncedGroceryRepository`
+3. **Remaining repository TODOs** — `update()`, `setChecked()`, `allItems` Flow in `FirestoreGroceryRepository` and `SyncedGroceryRepository`

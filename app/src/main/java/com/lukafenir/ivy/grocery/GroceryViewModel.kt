@@ -2,6 +2,8 @@ package com.lukafenir.ivy.grocery
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +45,7 @@ class GroceryViewModel(private val repository: GroceryRepository) : ViewModel() 
     fun deleteSelected(){
         viewModelScope.launch {
             val items = allItems.value.filter { it.id in _selectedIds.value }
-            items.forEach { repository.delete(it) }
+            items.map { async { repository.delete(it) }}.awaitAll()
             _selectedIds.value = emptySet()
         }
     }
