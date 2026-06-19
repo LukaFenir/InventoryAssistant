@@ -12,7 +12,7 @@ Inventory Assistant (Ivy) is an educational Android project built as a hands-on 
 
 ## Current Features
 
-- Grocery list with adding and checking off items
+- Grocery list with adding and deleting items
 - Light and dark theme support
 - Custom colour palette designed to reduce eye strain for users with Irlens Syndrome
 - Bottom navigation between Home, Inventory, and Settings screens
@@ -35,4 +35,4 @@ Inventory Assistant (Ivy) is an educational Android project built as a hands-on 
 
 ## Status
 
-This is a work in progress. Data is persisted locally using Room. Planned next steps include device sync and additional list management features such as deleting and reordering items.
+This is a work in progress. Data is persisted locally using Room. Planned next steps include checking off items, device sync, and additional list management features such as reordering items.

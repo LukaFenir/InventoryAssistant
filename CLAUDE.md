@@ -22,20 +22,9 @@ Iteration roadmap (from `ARCHITECTURE_EVOLUTION.md`):
 
 ---
 
-## Current branch: `delete-items-manual` (Issue #1)
+## Current branch: `main`
 
-### What IS fully implemented
-
-- **Selection mode UI:** long-click an item → selection bar replaces normal header; clicking items in selection mode toggles selection; item count updates live
-- **ViewModel:** `_selectedIds` StateFlow, `isInSelectionMode` derived state, `toggleSelection(id)`, `deleteItem(item)`, `deleteSelected()` (filters allItems by selectedIds, deletes each, clears selectedIds), `clearSelection()` (resets selectedIds to emptySet)
-- **Activity:** delete button wired up via `setupDeleteSelectedItems()` → calls `viewModel.deleteSelected()`
-- **`RoomGroceryRepository.delete()`** — implemented, delegates to DAO
-- **`SyncedGroceryRepository.delete(item)`** — calls `local.delete(item)` then `remote.delete(item)`
-- **`FirestoreGroceryRepository.delete(item)`** — calls `itemsCollection.document(item.id.toString()).delete().await()`
-
-### What is NOT yet implemented
-
-*(All cancel/delete selection features are now complete.)*
+*No feature branch in progress — next branch will document its scope here.*
 
 ### Known bugs
 

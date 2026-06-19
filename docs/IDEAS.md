@@ -15,5 +15,4 @@
 ## Next
 
 - Sync data between devices
-- Deleting items
 - Reordering items
