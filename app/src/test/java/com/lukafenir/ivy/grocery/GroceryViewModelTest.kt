@@ -233,6 +233,20 @@ class GroceryViewModelTest {
         collectJob.cancel()
     }
 
+    @Test
+    @DisplayName("WHEN deleteSelected called with items selected THEN selection is cleared before deletes complete")
+    fun deleteSelected_clearsSelectionImmediately() = runTest {
+        val collectJob = setupDeleteTests()
+        repository.shouldHangOnDelete = true
+        viewModel.toggleSelection(viewModel.allItems.value[0].id)
+        viewModel.toggleSelection(viewModel.allItems.value[2].id)
+
+        viewModel.deleteSelected()
+
+        assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be cleared before deletes complete")
+        collectJob.cancel()
+    }
+
     private fun CoroutineScope.setupDeleteTests(): Job {
         val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
         viewModel.addItem("Milk")

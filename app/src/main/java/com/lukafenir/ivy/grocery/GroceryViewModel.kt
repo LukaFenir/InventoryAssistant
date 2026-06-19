@@ -45,8 +45,8 @@ class GroceryViewModel(private val repository: GroceryRepository) : ViewModel() 
     fun deleteSelected(){
         viewModelScope.launch {
             val items = allItems.value.filter { it.id in _selectedIds.value }
-            items.map { async { repository.delete(it) }}.awaitAll()
             _selectedIds.value = emptySet()
+            items.map { async { repository.delete(it) }}.awaitAll()
         }
     }
 
