@@ -121,6 +121,10 @@ class GroceryListActivity : AppCompatActivity() {
         binding.deleteSelectedButton.setOnClickListener {
             viewModel.deleteSelected()
         }
+
+        binding.cancelSelectionButton.setOnClickListener {
+            viewModel.clearSelection()
+        }
     }
 
     private fun disableTransition() {

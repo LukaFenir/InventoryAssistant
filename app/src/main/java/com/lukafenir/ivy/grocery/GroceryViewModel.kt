@@ -58,4 +58,8 @@ class GroceryViewModel(private val repository: GroceryRepository) : ViewModel() 
         }
     }
 
+    fun clearSelection() {
+        _selectedIds.value = emptySet()
+    }
+
 }

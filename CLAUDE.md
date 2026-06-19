@@ -27,7 +27,7 @@ Iteration roadmap (from `ARCHITECTURE_EVOLUTION.md`):
 ### What IS fully implemented
 
 - **Selection mode UI:** long-click an item → selection bar replaces normal header; clicking items in selection mode toggles selection; item count updates live
-- **ViewModel:** `_selectedIds` StateFlow, `isInSelectionMode` derived state, `toggleSelection(id)`, `deleteItem(item)`, `deleteSelected()` (filters allItems by selectedIds, deletes each, clears selectedIds)
+- **ViewModel:** `_selectedIds` StateFlow, `isInSelectionMode` derived state, `toggleSelection(id)`, `deleteItem(item)`, `deleteSelected()` (filters allItems by selectedIds, deletes each, clears selectedIds), `clearSelection()` (resets selectedIds to emptySet)
 - **Activity:** delete button wired up via `setupDeleteSelectedItems()` → calls `viewModel.deleteSelected()`
 - **`RoomGroceryRepository.delete()`** — implemented, delegates to DAO
 - **`SyncedGroceryRepository.delete(item)`** — calls `local.delete(item)` then `remote.delete(item)`
@@ -35,22 +35,16 @@ Iteration roadmap (from `ARCHITECTURE_EVOLUTION.md`):
 
 ### What is NOT yet implemented
 
-1. **Cancel (X) button** in selection bar — no click listener wired yet; ViewModel also has no `clearSelection()` method
+*(All cancel/delete selection features are now complete.)*
 
 ### Known bugs
 
 - **Offline delete lost on app close** — if the user deletes an item while offline then force-kills the app, Firestore's queued write is not guaranteed to flush when back online. Fix requires WorkManager (see `docs/IDEAS.md` — Guaranteed remote deletes).
 - **App crashes on checkbox click** — `setChecked()` is `TODO` in both `FirestoreGroceryRepository` and `SyncedGroceryRepository`
 
-### Tests written
-
-- `SyncedGroceryRepositoryTest`: `delete_removedFromLocalAndRemote`, `delete_localFailure_doesNotDeleteFromRemote` — both use a shared `setupItems()` helper
-- `FirestoreGroceryRepositoryTest`: `delete_removesItemFromFirestore` — uses a shared `setupItems()` helper
-
 ---
 
 ## Next priorities
 
-1. **Wire cancel button** — add `clearSelection()` to ViewModel, hook up X button in activity
-2. **Fix checkbox crash** — implement `setChecked()` in `FirestoreGroceryRepository` and `SyncedGroceryRepository`
-3. **Remaining repository TODOs** — `update()`, `setChecked()`, `allItems` Flow in `FirestoreGroceryRepository` and `SyncedGroceryRepository`
+1. **Fix checkbox crash** — implement `setChecked()` in `FirestoreGroceryRepository` and `SyncedGroceryRepository`
+2. **Remaining repository TODOs** — `update()`, `setChecked()`, `allItems` Flow in `FirestoreGroceryRepository` and `SyncedGroceryRepository`

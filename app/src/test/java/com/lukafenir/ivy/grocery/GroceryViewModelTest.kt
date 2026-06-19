@@ -247,6 +247,20 @@ class GroceryViewModelTest {
         collectJob.cancel()
     }
 
+    @Test
+    @DisplayName("WHEN clearSelection called with items selected THEN selection is cleared")
+    fun clearSelection_resetsSelectedIds() = runTest {
+        val collectJob = setupDeleteTests()
+
+        viewModel.toggleSelection(viewModel.allItems.value[0].id)
+
+        viewModel.clearSelection()
+
+        assertEquals(emptySet<Int>(), viewModel.selectedIds.value)
+
+        collectJob.cancel()
+    }
+
     private fun CoroutineScope.setupDeleteTests(): Job {
         val collectJob = launch(testDispatcher) { viewModel.allItems.collect {} }
         viewModel.addItem("Milk")
