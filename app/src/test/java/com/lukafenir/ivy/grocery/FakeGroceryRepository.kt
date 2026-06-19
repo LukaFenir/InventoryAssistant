@@ -2,12 +2,16 @@ package com.lukafenir.ivy.grocery
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 class FakeGroceryRepository : GroceryRepository {
 
     private val items = mutableListOf<GroceryItem>()
     private val itemsFlow = MutableStateFlow<List<GroceryItem>>(emptyList())
     private var nextId = 1
+    var shouldHangOnDelete = false
+
+    var deleteCallCount = 0
 
     override val allItems: Flow<List<GroceryItem>> = itemsFlow
 
@@ -27,6 +31,8 @@ class FakeGroceryRepository : GroceryRepository {
     }
 
     override suspend fun delete(item: GroceryItem) {
+        deleteCallCount++
+        if (shouldHangOnDelete) suspendCancellableCoroutine<Unit> { /* never resumes */ }
         items.removeAll { it.id == item.id }
         itemsFlow.value = items.toList()
     }

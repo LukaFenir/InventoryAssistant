@@ -1,6 +1,7 @@
 package com.lukafenir.ivy.grocery
 
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.emptyFlow
@@ -31,5 +32,16 @@ class RoomGroceryRepositoryTest {
         val returnedId = repository.insert(item)
 
         assertEquals(generatedId, returnedId)
+    }
+
+    @Test
+    @DisplayName("WHEN delete called THEN DAO delete is called")
+    fun delete_callsDaoDelete() = runTest {
+        val item = GroceryItem(name = "Milk")
+        coEvery { dao.deleteItem(item) } returns Unit
+
+        repository.delete(item)
+
+        coVerify { dao.deleteItem(item) }
     }
 }
