@@ -7,12 +7,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.lukafenir.ivy.R
 import com.lukafenir.ivy.databinding.ActivityGroceryListBinding
 import com.lukafenir.ivy.home.MainActivity
 import com.lukafenir.ivy.settings.SettingsActivity
@@ -29,6 +30,8 @@ class GroceryListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGroceryListBinding
 
+    private lateinit var exitManagementModeOnBackPressed: OnBackPressedCallback
+
     companion object {
         private const val PREFS_NAME = "theme_prefs"
         private const val KEY_THEME_MODE = "theme_mode"
@@ -44,9 +47,8 @@ class GroceryListActivity : AppCompatActivity() {
 
         setupNavigation()
         setupRecyclerView()
-        setupSelectionMode()
+        setupManagementMode()
         setupAddItem()
-        setupDeleteSelectedItems()
         disableTransition()
     }
 
@@ -72,8 +74,8 @@ class GroceryListActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = GroceryAdapter(
             onCheckedChanged = { item, isChecked -> viewModel.setChecked(item.id, isChecked) },
-            onLongClick = { item -> if(!viewModel.isInSelectionMode.value) viewModel.toggleSelection(item.id) },
-            onItemClick = { item -> viewModel.toggleSelection(item.id) }
+            onLongClick = { _ -> if(!viewModel.isInManagementMode.value) viewModel.enterManagementMode() }, //add "inline edit"
+            onDeleteItem = { item -> viewModel.deleteItem(item) }
         )
         binding.groceryRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.groceryRecyclerView.adapter = adapter
@@ -87,21 +89,26 @@ class GroceryListActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupSelectionMode() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.isInSelectionMode.collect { inSelectionMode ->
-                    binding.normalHeader.visibility = if (inSelectionMode) View.GONE else View.VISIBLE
-                    binding.selectionBar.visibility = if (inSelectionMode) View.VISIBLE else View.GONE
-                }
-            }
+    private fun setupManagementMode() {
+        binding.manageButton.setOnClickListener {
+            viewModel.enterManagementMode()
+        }
+
+        binding.exitManagementButton.setOnClickListener {
+            viewModel.exitManagementMode()
+        }
+
+        exitManagementModeOnBackPressed = onBackPressedDispatcher.addCallback(this, enabled = false) {
+            viewModel.exitManagementMode()
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.selectedIds.collect { ids ->
-                    adapter.updateSelection(ids)
-                    binding.selectionCountText.text = getString(R.string.items_selected, ids.size)
+                viewModel.isInManagementMode.collect { isInManagementMode ->
+                    binding.normalHeader.visibility = if (isInManagementMode) View.GONE else View.VISIBLE
+                    binding.managementBar.visibility = if (isInManagementMode) View.VISIBLE else View.GONE
+                    adapter.setManagementMode(isInManagementMode)
+                    exitManagementModeOnBackPressed.isEnabled = isInManagementMode
                 }
             }
         }
@@ -114,16 +121,6 @@ class GroceryListActivity : AppCompatActivity() {
                 viewModel.addItem(name)
                 binding.itemNameInput.text.clear()
             }
-        }
-    }
-
-    private fun setupDeleteSelectedItems() {
-        binding.deleteSelectedButton.setOnClickListener {
-            viewModel.deleteSelected()
-        }
-
-        binding.cancelSelectionButton.setOnClickListener {
-            viewModel.clearSelection()
         }
     }
 

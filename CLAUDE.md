@@ -29,7 +29,6 @@ Iteration roadmap (from `ARCHITECTURE_EVOLUTION.md`):
 ### Known bugs
 
 - **Offline delete lost on app close** — if the user deletes an item while offline then force-kills the app, Firestore's queued write is not guaranteed to flush when back online. Fix requires WorkManager (see `docs/IDEAS.md` — Guaranteed remote deletes).
-- **App crashes on checkbox click** — `setChecked()` is `TODO` in both `FirestoreGroceryRepository` and `SyncedGroceryRepository`
 
 ---
 

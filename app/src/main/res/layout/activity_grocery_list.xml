@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
-    <!-- Header / Selection Bar -->
+    <!-- Header / Management Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,21 +18,35 @@
             android:id="@+id/normalHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/grocery_list_title"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorOnSurface" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/manageButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:contentDescription="@string/enter_manage_mode"
+                app:icon="@drawable/ic_edit"
+                app:iconTint="?attr/colorOnSurface" />
+
         </LinearLayout>
 
-        <!-- Selection mode bar -->
+        <!-- Management mode bar -->
         <LinearLayout
-            android:id="@+id/selectionBar"
+            android:id="@+id/managementBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -42,36 +56,25 @@
             android:visibility="gone">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/cancelSelectionButton"
+                android:id="@+id/exitManagementButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:contentDescription="Cancel selection"
+                android:contentDescription="@string/exit_manage_mode"
                 app:icon="@drawable/ic_close"
                 app:iconTint="?attr/colorOnSurface" />
 
             <TextView
-                android:id="@+id/selectionCountText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingStart="4dp"
+                android:text="@string/manage_list"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorOnSurface" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/deleteSelectedButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:contentDescription="Delete selected items"
-                app:icon="@drawable/ic_delete"
-                app:iconTint="?attr/colorOnSurface" />
 
         </LinearLayout>
 
@@ -81,8 +84,7 @@
         android:id="@+id/groceryRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+        android:layout_weight="1" />
 
     <!-- Input Row -->
     <LinearLayout
@@ -100,15 +102,13 @@
             android:layout_marginEnd="8dp"
             android:hint="Add item"
             android:inputType="text"
-            android:imeOptions="actionDone"
-            />
+            android:imeOptions="actionDone" />
 
         <Button
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add"
-            />
+            android:text="Add" />
 
     </LinearLayout>
 
