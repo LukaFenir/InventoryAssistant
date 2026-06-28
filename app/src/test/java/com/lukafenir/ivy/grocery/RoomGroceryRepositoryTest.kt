@@ -44,4 +44,15 @@ class RoomGroceryRepositoryTest {
 
         coVerify { dao.deleteItem(item) }
     }
+
+    @Test
+    @DisplayName("WHEN setChecked called THEN DAO setChecked is called")
+    fun setChecked_callsDaoSetChecked() = runTest {
+        val item = GroceryItem(name = "Milk")
+        coEvery { dao.setChecked(item.id, true) } returns Unit
+
+        repository.setChecked(item.id, true)
+
+        coVerify { dao.setChecked(item.id, true) }
+    }
 }

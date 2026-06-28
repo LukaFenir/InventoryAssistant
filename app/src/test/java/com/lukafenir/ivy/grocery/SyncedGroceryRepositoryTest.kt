@@ -65,6 +65,30 @@ class SyncedGroceryRepositoryTest {
         coVerify(exactly = 0) { remote.delete(any()) }
     }
 
+    @Test
+    @DisplayName("WHEN setChecked called THEN item is checked in local and remote")
+    fun setChecked_checkInLocalAndRemote() = runTest {
+        val (_, itemToCheck, _) = setupItems()
+        coEvery { local.setChecked(itemToCheck.id, true) } just runs
+        coEvery { remote.setChecked(itemToCheck.id, true) } just runs
+
+        repository.setChecked(itemToCheck.id, true)
+
+        coVerify { local.setChecked(itemToCheck.id, true) }
+        coVerify { remote.setChecked(itemToCheck.id, true) }
+    }
+
+    @Test
+    @DisplayName("WHEN local setChecked fails THEN remote setChecked is not called")
+    fun setChecked_localFailure_doesNotSetCheckedOnRemote() = runTest {
+        val (_, itemToSelect, _) = setupItems()
+        coEvery { local.setChecked(itemToSelect.id, true) } throws RuntimeException("DB error")
+
+        runCatching { repository.setChecked(itemToSelect.id, true) }
+
+        coVerify(exactly = 0) { remote.setChecked(any(), any()) }
+    }
+
     private suspend fun setupItems(): List<GroceryItem> {
         val item1 = GroceryItem(name = "Milk")
         val item2 = GroceryItem(name = "Eggs")
