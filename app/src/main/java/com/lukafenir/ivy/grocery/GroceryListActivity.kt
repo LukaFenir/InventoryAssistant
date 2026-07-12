@@ -74,7 +74,8 @@ class GroceryListActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = GroceryAdapter(
             onCheckedChanged = { item, isChecked -> viewModel.setChecked(item.id, isChecked) },
-            onLongClick = { _ -> if(!viewModel.isInManagementMode.value) viewModel.enterManagementMode() }, //add "inline edit"
+            onLongClick = { _ -> if(!viewModel.isInManagementMode.value) viewModel.enterManagementMode() },
+            onManagementLongClick = { item -> viewModel.startEditing(item) },
             onDeleteItem = { item -> viewModel.deleteItem(item) }
         )
         binding.groceryRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -109,6 +110,14 @@ class GroceryListActivity : AppCompatActivity() {
                     binding.managementBar.visibility = if (isInManagementMode) View.VISIBLE else View.GONE
                     adapter.setManagementMode(isInManagementMode)
                     exitManagementModeOnBackPressed.isEnabled = isInManagementMode
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.editingItemId.collect { editingItemId ->
+                    adapter.setEditingItem(editingItemId)
                 }
             }
         }

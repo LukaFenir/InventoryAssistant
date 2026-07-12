@@ -16,8 +16,10 @@ import kotlinx.coroutines.launch
 class GroceryViewModel(private val repository: GroceryRepository) : ViewModel() {
 
     private val _isInManagementMode = MutableStateFlow<Boolean>(false)
+    private val _editingItemId = MutableStateFlow<Int?>(null)
 
     val isInManagementMode: StateFlow<Boolean> = _isInManagementMode.asStateFlow()
+    val editingItemId: StateFlow<Int?> = _editingItemId.asStateFlow()
 
     val allItems: StateFlow<List<GroceryItem>> = repository.allItems.stateIn(
         scope = viewModelScope,
@@ -45,12 +47,17 @@ class GroceryViewModel(private val repository: GroceryRepository) : ViewModel() 
         }
     }
 
+    fun startEditing(item: GroceryItem){
+        _editingItemId.value = item.id
+    }
+
     fun enterManagementMode() {
         _isInManagementMode.value = true
     }
 
     fun exitManagementMode() {
         _isInManagementMode.value = false
+        _editingItemId.value = null
     }
 
 }
