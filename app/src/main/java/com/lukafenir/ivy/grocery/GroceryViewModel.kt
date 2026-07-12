@@ -15,12 +15,9 @@ import kotlinx.coroutines.launch
 
 class GroceryViewModel(private val repository: GroceryRepository) : ViewModel() {
 
-    private val _selectedIds = MutableStateFlow<Set<Int>>(emptySet())
-    val selectedIds: StateFlow<Set<Int>> = _selectedIds.asStateFlow()
+    private val _isInManagementMode = MutableStateFlow<Boolean>(false)
 
-    val isInSelectionMode: StateFlow<Boolean> = _selectedIds
-        .map { it.isNotEmpty() }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    val isInManagementMode: StateFlow<Boolean> = _isInManagementMode.asStateFlow()
 
     val allItems: StateFlow<List<GroceryItem>> = repository.allItems.stateIn(
         scope = viewModelScope,
@@ -42,24 +39,18 @@ class GroceryViewModel(private val repository: GroceryRepository) : ViewModel() 
         }
     }
 
-    fun deleteSelected(){
+    fun deleteItem(item: GroceryItem) {
         viewModelScope.launch {
-            val items = allItems.value.filter { it.id in _selectedIds.value }
-            _selectedIds.value = emptySet()
-            items.map { async { repository.delete(it) }}.awaitAll()
+            repository.delete(item)
         }
     }
 
-    fun toggleSelection(id: Int) {
-        _selectedIds.value = if (id in _selectedIds.value) {
-            _selectedIds.value - id
-        } else {
-            _selectedIds.value + id
-        }
+    fun enterManagementMode() {
+        _isInManagementMode.value = true
     }
 
-    fun clearSelection() {
-        _selectedIds.value = emptySet()
+    fun exitManagementMode() {
+        _isInManagementMode.value = false
     }
 
 }

@@ -22,4 +22,7 @@
     <!-- Inventory Screen -->
     <string name="grocery_list_title">Grocery List</string>
     <string name="items_selected">%1$d selected</string>
+    <string name="manage_list">Manage List</string>
+    <string name="enter_manage_mode">Manage items</string>
+    <string name="exit_manage_mode">Done managing</string>
 </resources>

@@ -12,6 +12,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -143,121 +145,97 @@ class GroceryViewModelTest {
     }
 
     @Test
-    @DisplayName("WHEN item selected for deletion THEN id added to selected ids")
-    fun toggleSelection_addsIdToSelectedIds() = runTest {
-        val collectJob = setupDeleteTests()
-        val selectedId = viewModel.allItems.value[1].id
-
-        viewModel.toggleSelection(viewModel.allItems.value[1].id)
-
-        assertEquals(viewModel.selectedIds.value, setOf(selectedId))
-
-        collectJob.cancel()
+    @DisplayName("WHEN management mode entered THEN isInManagementMode is true")
+    fun enterManagementMode_setsIsInManagementModeTrue() {
+        viewModel.enterManagementMode()
+        assertTrue(viewModel.isInManagementMode.value)
     }
 
     @Test
-    @DisplayName("WHEN item selected then deselected for deletion THEN id removed from selected ids")
-    fun toggleSelection_calledTwice_removesIdFromSelectedIds() = runTest {
-        val collectJob = setupDeleteTests()
-        val selectedId = viewModel.allItems.value[1].id
-
-        viewModel.toggleSelection(viewModel.allItems.value[1].id)
-        viewModel.toggleSelection(viewModel.allItems.value[1].id)
-
-        assertEquals(viewModel.selectedIds.value, emptySet<Int>())
-
-        collectJob.cancel()
+    @DisplayName("WHEN management mode is entered AND exited THEN isInManagementMode is false")
+    fun enterThenExitManagementMode_setsIsInManagementModeFalse() {
+        viewModel.enterManagementMode()
+        viewModel.exitManagementMode()
+        assertFalse(viewModel.isInManagementMode.value)
     }
 
     @Test
-    @DisplayName("WHEN deleteSelected called THEN all selected items are deleted from repository")
-    fun deleteSelected_deletesSelectedFromRepository() = runTest {
+    @DisplayName("WHEN management mode exited THEN isInManagementMode is false")
+    fun exitManagementMode_setsIsInManagementModeFalse() {
+        viewModel.exitManagementMode()
+        assertFalse(viewModel.isInManagementMode.value)
+    }
+
+    @Test
+    @DisplayName("WHEN deleteItem called THEN item is deleted from repository")
+    fun deleteItem_deletesItemFromRepository() = runTest {
         val collectJob = setupDeleteTests()
 
-        viewModel.toggleSelection(viewModel.allItems.value[0].id)
-        viewModel.toggleSelection(viewModel.allItems.value[2].id)
-
-        viewModel.deleteSelected()
+        viewModel.deleteItem(viewModel.allItems.value[2])
 
         val items = viewModel.allItems.value
-        assertEquals(1, items.size, "Should be one item left after delete")
-        assertEquals("Cheese", items[0].name, "Should be left with Cheese")
-        assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be cleared")
+        assertEquals(2, items.size, "Should be two items left after delete")
+        assertEquals("Milk", items[0].name, "Should be left with Milk")
+        assertEquals("Cheese", items[1].name, "Should be left with Cheese")
 
         collectJob.cancel()
     }
 
     @Test
-    @DisplayName("WHEN deleteSelected called on empty list THEN no items are deleted from the repository")
-    fun deleteSelectedOnEmpty_deletesNothingFromRepository() = runTest {
-        val collectJob = setupDeleteTests()
-        val allItemsSize = viewModel.allItems.value.size
-
-        viewModel.deleteSelected()
-
-        val items = viewModel.allItems.value
-        assertEquals(allItemsSize, items.size, "None of the items should be deleted")
-        assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be empty regardless")
-
-        collectJob.cancel()
-    }
-
-    @Test
-    @DisplayName("WHEN deleteSelected called when all items selected THEN all items are deleted from repository")
-    fun deleteSelectedAllItems_deletesAllItemsFromRepository() = runTest {
+    @DisplayName("WHEN deleteItem called on all items THEN all items are deleted from repository")
+    fun deleteItemOnAllItems_deletesAllItemFromRepository() = runTest {
         val collectJob = setupDeleteTests()
 
-        viewModel.allItems.value.forEach { viewModel.toggleSelection(it.id) }
+        //Delete the first item in the list 3 times
+        viewModel.deleteItem(viewModel.allItems.value[0])
+        viewModel.deleteItem(viewModel.allItems.value[0])
+        viewModel.deleteItem(viewModel.allItems.value[0])
 
-        viewModel.deleteSelected()
-
-        val items = viewModel.allItems.value
-        assertEquals(0, items.size, "Should have no items left after delete")
-        assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be cleared")
+        assertEquals(0, viewModel.allItems.value.size, "Should be no items left after multiple deletes")
 
         collectJob.cancel()
     }
 
     @Test
-    @DisplayName("WHEN deleteSelected called when multiple items selected THEN deletes are initiated concurrently")
-    fun deleteSelected_allDeletesInitiatedConcurrently() = runTest {
+    @DisplayName("WHEN deleteItem called twice on same id THEN item is deleted once")
+    fun deleteItemTwiceOnSameId_deletesItemOnce() = runTest {
+        val collectJob = setupDeleteTests()
+
+        var item = viewModel.allItems.value[0]
+        viewModel.deleteItem(item)
+        viewModel.deleteItem(item)
+
+        assertEquals(2, viewModel.allItems.value.size, "Should still be 2 items after deleting same item twice")
+
+        collectJob.cancel()
+    }
+
+    @Test
+    @DisplayName("WHEN deleteItem called on id that doesn't exist THEN no item is deleted")
+    fun deleteItemOnNonexistentId_noItemIsDeleted() = runTest {
+        val collectJob = setupDeleteTests()
+
+        var nonexistentItem = GroceryItem(77, "Non-Existent Item")
+        viewModel.deleteItem(nonexistentItem)
+
+        assertEquals(3, viewModel.allItems.value.size, "Should still be 3 items after deleting an item that doesn't exist")
+
+        collectJob.cancel()
+    }
+
+    @Test
+    @DisplayName("WHEN deleteItem called on multiple items THEN deletes are initiated concurrently")
+    fun deleteItem_multipleCallsInitiatedConcurrently() = runTest {
         val collectJob = setupDeleteTests()
         repository.shouldHangOnDelete = true
-        viewModel.toggleSelection(viewModel.allItems.value[0].id)
-        viewModel.toggleSelection(viewModel.allItems.value[2].id)
+        val firstItem = viewModel.allItems.value[0]
+        val secondItem = viewModel.allItems.value[2]
 
-        viewModel.deleteSelected()
+        viewModel.deleteItem(firstItem)
+        viewModel.deleteItem(secondItem)
         advanceUntilIdle()
 
         assertEquals(2, repository.deleteCallCount, "Expected two calls to delete even though they hang")
-        collectJob.cancel()
-    }
-
-    @Test
-    @DisplayName("WHEN deleteSelected called with items selected THEN selection is cleared before deletes complete")
-    fun deleteSelected_clearsSelectionImmediately() = runTest {
-        val collectJob = setupDeleteTests()
-        repository.shouldHangOnDelete = true
-        viewModel.toggleSelection(viewModel.allItems.value[0].id)
-        viewModel.toggleSelection(viewModel.allItems.value[2].id)
-
-        viewModel.deleteSelected()
-
-        assertEquals(emptySet<Int>(), viewModel.selectedIds.value, "Selection should be cleared before deletes complete")
-        collectJob.cancel()
-    }
-
-    @Test
-    @DisplayName("WHEN clearSelection called with items selected THEN selection is cleared")
-    fun clearSelection_resetsSelectedIds() = runTest {
-        val collectJob = setupDeleteTests()
-
-        viewModel.toggleSelection(viewModel.allItems.value[0].id)
-
-        viewModel.clearSelection()
-
-        assertEquals(emptySet<Int>(), viewModel.selectedIds.value)
-
         collectJob.cancel()
     }
 
