@@ -22,17 +22,16 @@ Iteration roadmap (from `ARCHITECTURE_EVOLUTION.md`):
 
 ---
 
-## Current branch: `main`
+## Implemented features
 
-*No feature branch in progress — next branch will document its scope here.*
+- Management mode (long-click or manage button) with per-item delete — `onDeleteItem` wired to `viewModel.deleteItem(item)`
+- Checkbox toggling — `setChecked()` works end-to-end (local + remote) via `SyncedGroceryRepository`
+
+## In-progress work
+
+- **Editing an item's name** — long-click in management mode should let the user edit the item, not just delete it. Not wired up yet: no edit UI (dialog/inline field), no `viewModel.editItem(...)` or equivalent, no repository-level update call from the UI. Check `GroceryListActivity.setupRecyclerView()`'s `onLongClick` handler for the current state of this.
+- **Repository `update()` TODOs** — `update()` is still `TODO("Not yet implemented")` in both `FirestoreGroceryRepository` and `SyncedGroceryRepository`. Editing won't sync remotely until these are implemented.
 
 ### Known bugs
 
 - **Offline delete lost on app close** — if the user deletes an item while offline then force-kills the app, Firestore's queued write is not guaranteed to flush when back online. Fix requires WorkManager (see `docs/IDEAS.md` — Guaranteed remote deletes).
-
----
-
-## Next priorities
-
-1. **Fix checkbox crash** — implement `setChecked()` in `FirestoreGroceryRepository` and `SyncedGroceryRepository`
-2. **Remaining repository TODOs** — `update()`, `setChecked()`, `allItems` Flow in `FirestoreGroceryRepository` and `SyncedGroceryRepository`
